@@ -36,10 +36,9 @@ jobs:
         env:
           nexusUsername: ${{ secrets.nexusUsername }}
           nexusPassword: ${{ secrets.nexusPassword }}
-          signing:
-            keyId: ${{ secrets.signingKeyId }}
-            password: ${{ secrets.signingPassword }}
-            secretKeyRingFile: ${{ secrets.secretKeyRingFile }}
+          signing.keyId: ${{ secrets.signingKeyId }}
+          signing.password: ${{ secrets.signingPassword }}
+          signing.secretKeyRingFile: ${{ secrets.secretKeyRingFile }}
         with:
           gradle-version: rc
           arguments:

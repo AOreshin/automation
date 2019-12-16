@@ -33,12 +33,6 @@ jobs:
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1
-        env:
-          nexusUsername: ${{ secrets.nexusUsername }}
-          nexusPassword: ${{ secrets.nexusPassword }}
-          signing.keyId: ${{ secrets.signingKeyId }}
-          signing.password: ${{ secrets.signingPassword }}
-          signing.secretKeyRingFile: ${{ secrets.secretKeyRingFile }}
         with:
           gradle-version: rc
           arguments:
@@ -47,3 +41,8 @@ jobs:
             allure-webdriver:uploadArchives allure-webdriver:closeAndReleaseRepository
             allure-steps:uploadArchives allure-steps:closeAndReleaseRepository
             junit5-extensions:uploadArchives junit5-extensions:closeAndReleaseRepository
+            -DnexusUsername=${{ secrets.nexusUsername }}
+            -DexusPassword=${{ secrets.nexusPassword }}
+            -Dsigning.keyId=${{ secrets.signingKeyId }}
+            -Dsigning.password=${{ secrets.signingPassword }}
+            -Dsigning.secretKeyRingFile=${{ secrets.secretKeyRingFile }}

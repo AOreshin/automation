@@ -42,7 +42,7 @@ jobs:
             allure-steps:uploadArchives allure-steps:closeAndReleaseRepository
             junit5-extensions:uploadArchives junit5-extensions:closeAndReleaseRepository
             -DnexusUsername=${{ secrets.nexusUsername }}
-            -DexusPassword=${{ secrets.nexusPassword }}
-            -Dsigning.keyId=${{ secrets.signingKeyId }}
+            -DnexusPassword=${{ secrets.nexusPassword }}
+            -Psigning.keyId=${{ secrets.signingKeyId }}
             -Dsigning.password=${{ secrets.signingPassword }}
             -Dsigning.secretKeyRingFile=${{ secrets.secretKeyRingFile }}

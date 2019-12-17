@@ -16,20 +16,20 @@ jobs:
         with:
           java-version: 11
 
-      - name: Running unit tests
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: rc
-          arguments: test
-
-      - name: Test coverage verification
-        uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: rc
-          arguments: jacocoTestCoverageVerification
+#      - name: Running unit tests
+#        uses: eskatos/gradle-command-action@v1
+#        with:
+#          gradle-version: rc
+#          arguments: test
+#
+#      - name: Test coverage verification
+#        uses: eskatos/gradle-command-action@v1
+#        with:
+#          gradle-version: rc
+#          arguments: jacocoTestCoverageVerification
 
       - name: Key decryption
-        run: gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.passphrase }} --output keys.gpg keys.gpg.gpg
+        run: gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.passphrase }} --output "${GITHUB_WORKSPACE}/keys.gpg" "${GITHUB_WORKSPACE}/keys.gpg.gpg"
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1

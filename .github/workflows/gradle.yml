@@ -31,7 +31,7 @@ jobs:
       - name: Key decryption
         run: gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.passphrase }} --output $HOME/secrets/keys.gpg keys.gpg.gpg
         env:
-          HOME: $
+          HOME: $HOME
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1

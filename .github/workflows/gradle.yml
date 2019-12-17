@@ -16,17 +16,13 @@ jobs:
         with:
           java-version: 11
 
-#      - name: Running unit tests
-#        uses: eskatos/gradle-command-action@v1
-#        with:
-#          gradle-version: rc
-#          arguments: test
-#
-#      - name: Test coverage verification
-#        uses: eskatos/gradle-command-action@v1
-#        with:
-#          gradle-version: rc
-#          arguments: jacocoTestCoverageVerification
+      - name: Running unit tests
+        shell: bash
+        run: ./gradlew test
+
+      - name: Test coverage verification
+        shell: bash
+        run: ./gradlew jacocoTestCoverageVerification
 
       - name: Key decryption
         run: ./.github/workflows/decrypt.sh
@@ -36,11 +32,9 @@ jobs:
       - name: Releasing
         shell: bash
         run: ./gradlew
-            allure-junit5-extensions:uploadArchives allure-junit5-extensions:closeAndReleaseRepository
-            allure-rest-assured:uploadArchives allure-rest-assured:closeAndReleaseRepository
-            allure-webdriver:uploadArchives allure-webdriver:closeAndReleaseRepository
-            allure-steps:uploadArchives allure-steps:closeAndReleaseRepository
-            junit5-extensions:uploadArchives junit5-extensions:closeAndReleaseRepository
+            signMavenJavaPublication
+            publishAllPublicationsToSonatypeRepository
+            closeAndReleaseRepository
             -PnexusUsername=${{ secrets.nexusUsername }}
             -PnexusPassword=${{ secrets.nexusPassword }}
             -Psigning.keyId=${{ secrets.signingKeyId }}

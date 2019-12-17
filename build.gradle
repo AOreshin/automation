@@ -1,29 +1,87 @@
+import java.time.Duration
+
 buildscript {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
-        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.21.1"
-    }
 }
 
-version = '1.0.0.4'
+plugins {
+    id 'de.marcphilipp.nexus-publish' version '0.4.0'
+    id 'io.codearte.nexus-staging' version '0.21.1'
+}
+
+group = "com.github.aoreshin"
+version = '1.0.0.10'
+
+nexusStaging {
+    numberOfRetries = 500
+}
 
 subprojects {
-    apply plugin: 'com.bmuschko.nexus'
-    apply plugin: 'io.codearte.nexus-staging'
+    apply plugin: 'de.marcphilipp.nexus-publish'
+    apply plugin: 'signing'
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'jacoco'
+
+    nexusPublishing {
+        Duration duration = Duration.ofMinutes(5)
+        connectTimeout = duration
+        clientTimeout = duration
+
+        repositories {
+            sonatype {
+                username = "${nexusUsername}"
+                password = "${nexusPassword}"
+            }
+        }
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                groupId = rootProject.group
+                artifactId = project.name
+                version = rootProject.version
+
+                pom {
+                    name = project.name
+                    description = 'Project to ease pain of test automation'
+                    url = 'https://github.com/AOreshin/automation'
+                    inceptionYear = '2019'
+                    licenses {
+                        license {
+                            name = 'GNU General Public License v3.0'
+                            url = 'https://www.gnu.org/licenses/gpl-3.0.en.html'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'AOreshin'
+                            name = 'Alexander Oreshin'
+                            email = 'hummr65@gmail.com'
+                        }
+                    }
+                    scm {
+                        url = 'https://github.com/AOreshin/automation'
+                        connection = 'scm:https://github.com/AOreshin/automation.git'
+                        developerConnection = 'scm:https://github.com/AOreshin/automation.git'
+                    }
+                }
+            }
+        }
+    }
+
+    signing {
+        sign publishing.publications.mavenJava
+    }
 
     repositories {
         mavenCentral()
     }
 
-    group = "com.github.aoreshin"
-    version = rootProject.version
     sourceCompatibility = 11
 
     dependencies {
@@ -58,48 +116,5 @@ subprojects {
                 }
             }
         }
-    }
-
-    modifyPom {
-        project {
-            name = project.name
-            description = project.description
-            url 'https://github.com/AOreshin/automation'
-            inceptionYear '2019'
-
-            scm {
-                url 'https://github.com/AOreshin/automation'
-                connection 'scm:https://github.com/AOreshin/automation.git'
-                developerConnection 'scm:https://github.com/AOreshin/automation.git'
-            }
-
-            licenses {
-                license {
-                    name 'GNU General Public License v3.0'
-                    url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-                    distribution 'repo'
-                }
-            }
-
-            developers {
-                developer {
-                    id 'AOreshin'
-                    name 'Alexander Oreshin'
-                    email 'hummr65@gmail.com'
-                }
-            }
-        }
-    }
-
-    extraArchive {
-        sources = true
-        tests = true
-        javadoc = true
-    }
-
-    nexus {
-        sign = true
-        repositoryUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-        snapshotRepositoryUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
 }

@@ -16,27 +16,37 @@ jobs:
         with:
           java-version: 11
 
-      - name: Running unit tests
-        shell: bash
-        run: ./gradlew test
-
-      - name: Test coverage verification
-        shell: bash
-        run: ./gradlew jacocoTestCoverageVerification
-
       - name: Key decryption
         run: ./.github/workflows/decrypt.sh
         env:
           passphrase: ${{ secrets.passphrase }}
 
+      - name: Running unit tests
+        shell: bash
+        run: ./gradlew test
+          -PnexusUsername=${{ secrets.nexusUsername }}
+          -PnexusPassword=${{ secrets.nexusPassword }}
+          -Psigning.keyId=${{ secrets.signingKeyId }}
+          -Psigning.password=${{ secrets.signingPassword }}
+          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
+
+      - name: Test coverage verification
+        shell: bash
+        run: ./gradlew jacocoTestCoverageVerification
+          -PnexusUsername=${{ secrets.nexusUsername }}
+          -PnexusPassword=${{ secrets.nexusPassword }}
+          -Psigning.keyId=${{ secrets.signingKeyId }}
+          -Psigning.password=${{ secrets.signingPassword }}
+          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
+
       - name: Releasing
         shell: bash
         run: ./gradlew
-            signMavenJavaPublication
-            publishAllPublicationsToSonatypeRepository
-            closeAndReleaseRepository
-            -PnexusUsername=${{ secrets.nexusUsername }}
-            -PnexusPassword=${{ secrets.nexusPassword }}
-            -Psigning.keyId=${{ secrets.signingKeyId }}
-            -Psigning.password=${{ secrets.signingPassword }}
-            -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
+          signMavenJavaPublication
+          publishAllPublicationsToSonatypeRepository
+          closeAndReleaseRepository
+          -PnexusUsername=${{ secrets.nexusUsername }}
+          -PnexusPassword=${{ secrets.nexusPassword }}
+          -Psigning.keyId=${{ secrets.signingKeyId }}
+          -Psigning.password=${{ secrets.signingPassword }}
+          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg

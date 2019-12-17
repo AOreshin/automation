@@ -35,9 +35,8 @@ jobs:
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1
-        with:
-          gradle-version: rc
-          arguments:
+        shell: bash
+        run: ./gradlew
             allure-junit5-extensions:uploadArchives allure-junit5-extensions:closeAndReleaseRepository
             allure-rest-assured:uploadArchives allure-rest-assured:closeAndReleaseRepository
             allure-webdriver:uploadArchives allure-webdriver:closeAndReleaseRepository

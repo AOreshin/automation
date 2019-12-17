@@ -34,7 +34,6 @@ jobs:
           passphrase: ${{ secrets.passphrase }}
 
       - name: Releasing
-        uses: eskatos/gradle-command-action@v1
         shell: bash
         run: ./gradlew
             allure-junit5-extensions:uploadArchives allure-junit5-extensions:closeAndReleaseRepository

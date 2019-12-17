@@ -21,27 +21,11 @@ jobs:
         env:
           passphrase: ${{ secrets.passphrase }}
 
-      - name: Running unit tests
-        shell: bash
-        run: ./gradlew test
-          -PnexusUsername=${{ secrets.nexusUsername }}
-          -PnexusPassword=${{ secrets.nexusPassword }}
-          -Psigning.keyId=${{ secrets.signingKeyId }}
-          -Psigning.password=${{ secrets.signingPassword }}
-          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
-
-      - name: Test coverage verification
-        shell: bash
-        run: ./gradlew jacocoTestCoverageVerification
-          -PnexusUsername=${{ secrets.nexusUsername }}
-          -PnexusPassword=${{ secrets.nexusPassword }}
-          -Psigning.keyId=${{ secrets.signingKeyId }}
-          -Psigning.password=${{ secrets.signingPassword }}
-          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
-
-      - name: Releasing
+      - name: Test, verify coverage, release
         shell: bash
         run: ./gradlew
+          test
+          jacocoTestCoverageVerification
           signMavenJavaPublication
           publishAllPublicationsToSonatypeRepository
           closeAndReleaseRepository

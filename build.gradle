@@ -9,11 +9,11 @@ buildscript {
     }
 }
 
-version = '1.0.0.2'
+version = '1.0.0.3'
 
 subprojects {
     apply plugin: 'com.bmuschko.nexus'
-    apply plugin: "io.codearte.nexus-staging"
+    apply plugin: 'io.codearte.nexus-staging'
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'jacoco'

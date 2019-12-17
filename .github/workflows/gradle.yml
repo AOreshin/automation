@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - '*'
 
 jobs:
   build:
@@ -31,6 +28,9 @@ jobs:
           gradle-version: rc
           arguments: jacocoTestCoverageVerification
 
+      - name: Key decryption
+        run: gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.passphrase }} --output keys.gpg keys.gpg.gpg
+
       - name: Releasing
         uses: eskatos/gradle-command-action@v1
         with:
@@ -41,8 +41,8 @@ jobs:
             allure-webdriver:uploadArchives allure-webdriver:closeAndReleaseRepository
             allure-steps:uploadArchives allure-steps:closeAndReleaseRepository
             junit5-extensions:uploadArchives junit5-extensions:closeAndReleaseRepository
-            -DnexusUsername=${{ secrets.nexusUsername }}
-            -DnexusPassword=${{ secrets.nexusPassword }}
-            -Psigning.keyId=${{ secrets.signingKeyId }}
-            -Dsigning.password=${{ secrets.signingPassword }}
-            -Dsigning.secretKeyRingFile=${{ secrets.secretKeyRingFile }}
+            -PnexusUsername = ${{ secrets.nexusUsername }}
+            -PnexusPassword = ${{ secrets.nexusPassword }}
+            -Psigning.keyId = ${{ secrets.signingKeyId }}
+            -Psigning.password = ${{ secrets.signingPassword }}
+            -Psigning.secretKeyRingFile = "${GITHUB_WORKSPACE}/keys.gpg"

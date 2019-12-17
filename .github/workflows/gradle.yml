@@ -43,8 +43,10 @@ jobs:
             allure-webdriver:uploadArchives allure-webdriver:closeAndReleaseRepository
             allure-steps:uploadArchives allure-steps:closeAndReleaseRepository
             junit5-extensions:uploadArchives junit5-extensions:closeAndReleaseRepository
-            -PnexusUsername = ${{ secrets.nexusUsername }}
-            -PnexusPassword = ${{ secrets.nexusPassword }}
-            -Psigning.keyId = ${{ secrets.signingKeyId }}
-            -Psigning.password = ${{ secrets.signingPassword }}
-            -Psigning.secretKeyRingFile = $HOME/secrets/keys.gpg
+            -PnexusUsername=${{ secrets.nexusUsername }}
+            -PnexusPassword=${{ secrets.nexusPassword }}
+            -Psigning.keyId=${{ secrets.signingKeyId }}
+            -Psigning.password=${{ secrets.signingPassword }}
+            -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
+          env:
+            HOME: ${HOME}

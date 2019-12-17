@@ -45,6 +45,8 @@ subprojects {
                 artifactId = project.name
                 version = rootProject.version
 
+                from components.java
+
                 pom {
                     name = project.name
                     description = 'Project to ease pain of test automation'

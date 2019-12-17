@@ -16,11 +16,6 @@ jobs:
         with:
           java-version: 11
 
-      - name: Key decryption
-        run: ./.github/workflows/decrypt.sh
-        env:
-          passphrase: ${{ secrets.passphrase }}
-
       - name: Test, verify coverage, release
         shell: bash
         run: ./gradlew
@@ -33,4 +28,4 @@ jobs:
           -PnexusPassword=${{ secrets.nexusPassword }}
           -Psigning.keyId=${{ secrets.signingKeyId }}
           -Psigning.password=${{ secrets.signingPassword }}
-          -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg
+          -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/keys.gpg

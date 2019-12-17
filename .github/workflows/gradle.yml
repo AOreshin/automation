@@ -35,8 +35,6 @@ jobs:
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1
-        env:
-          HOME: ${HOME}
         with:
           gradle-version: rc
           arguments:
@@ -49,4 +47,4 @@ jobs:
             -PnexusPassword=${{ secrets.nexusPassword }}
             -Psigning.keyId=${{ secrets.signingKeyId }}
             -Psigning.password=${{ secrets.signingPassword }}
-            -Psigning.secretKeyRingFile="$HOME/secrets/keys.gpg"
+            -Psigning.secretKeyRingFile=$HOME/secrets/keys.gpg

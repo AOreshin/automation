@@ -31,7 +31,7 @@ jobs:
       - name: Key decryption
         run: ./.github/workflows/decrypt.sh
         env:
-          LARGE_SECRET_PASSPHRASE: $
+          passphrase: $
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1

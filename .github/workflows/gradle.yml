@@ -29,7 +29,9 @@ jobs:
 #          arguments: jacocoTestCoverageVerification
 
       - name: Key decryption
-        run: gpg --quiet --batch --yes --decrypt --passphrase=${{ secrets.passphrase }} --output keys.gpg keys.gpg.gpg
+        run: ./.github/workflows/decrypt.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: $
 
       - name: Releasing
         uses: eskatos/gradle-command-action@v1
@@ -45,4 +47,4 @@ jobs:
             -PnexusPassword = ${{ secrets.nexusPassword }}
             -Psigning.keyId = ${{ secrets.signingKeyId }}
             -Psigning.password = ${{ secrets.signingPassword }}
-            -Psigning.secretKeyRingFile = keys.gpg
+            -Psigning.secretKeyRingFile = $HOME/secrets/keys.gpg

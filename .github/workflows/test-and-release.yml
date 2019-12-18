@@ -1,12 +1,10 @@
-name: Java CI
+name: Test and release
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - '*'
+
 jobs:
   build:
     runs-on: ubuntu-latest

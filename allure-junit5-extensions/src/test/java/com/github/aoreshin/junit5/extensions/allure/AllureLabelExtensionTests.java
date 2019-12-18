@@ -1,84 +1,78 @@
 package com.github.aoreshin.junit5.extensions.allure;
 
-import io.qameta.allure.Allure;
-import io.qameta.allure.model.Label;
-import io.qameta.allure.model.TestResult;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import io.qameta.allure.Allure;
+import io.qameta.allure.model.Label;
+import io.qameta.allure.model.TestResult;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import org.junit.jupiter.api.Test;
+
 final class AllureLabelExtensionTests {
-    @Test
-    void stringConstructorTest() {
-        String labelName = "blah-blah-blah";
-        String labelValue = "blah";
+  @Test
+  void stringConstructorTest() {
+    String labelName = "blah-blah-blah";
+    String labelValue = "blah";
 
+    AllureLabelExtension extension = new AllureLabelExtension(labelName, labelValue);
 
+    List<Label> actual = extension.getLabelList();
 
-        AllureLabelExtension extension = new AllureLabelExtension(labelName, labelValue);
+    assertEquals(1, actual.size());
 
-        List<Label> actual = extension.getLabelList();
+    Label actualLabel = actual.get(0);
+    assertEquals(labelName, actualLabel.getName());
+    assertEquals(labelValue, actualLabel.getValue());
+  }
 
-        assertEquals(1, actual.size());
+  @Test
+  void labelConstructorTest() {
+    String labelName = "blah-blah-blah";
+    String labelValue = "blah";
 
-        Label actualLabel = actual.get(0);
-        assertEquals(labelName, actualLabel.getName());
-        assertEquals(labelValue, actualLabel.getValue());
-    }
+    Label label = getLabel(labelName, labelValue);
 
-    @Test
-    void labelConstructorTest() {
-        String labelName = "blah-blah-blah";
-        String labelValue = "blah";
+    List<Label> expected = List.of(label);
 
-        Label label = getLabel(labelName, labelValue);
+    AllureLabelExtension extension = new AllureLabelExtension(label);
 
-        List<Label> expected = List.of(label);
+    assertEquals(expected, extension.getLabelList());
+  }
 
-        AllureLabelExtension extension = new AllureLabelExtension(label);
+  @Test
+  void labelListConstructorTest() {
+    String labelName = "blah-blah-blah";
+    String labelValue = "blah";
 
-        assertEquals(expected, extension.getLabelList());
-    }
+    List<Label> expected = List.of(getLabel(labelName, labelValue));
 
-    @Test
-    void labelListConstructorTest() {
-        String labelName = "blah-blah-blah";
-        String labelValue = "blah";
+    AllureLabelExtension extension = new AllureLabelExtension(expected);
 
-        List<Label> expected = List.of(getLabel(labelName, labelValue)) ;
+    assertEquals(expected, extension.getLabelList());
+  }
 
-        AllureLabelExtension extension = new AllureLabelExtension(expected);
+  @Test
+  void beforeEachTest() {
+    List<Label> labels =
+        List.of(getLabel("duck", "quack"), getLabel("dog", "bark"), getLabel("cat", "meow"));
 
-        assertEquals(expected, extension.getLabelList());
-    }
+    String uuid = Allure.getLifecycle().getCurrentTestCase().orElseThrow();
 
-    @Test
-    void beforeEachTest() {
-        List<Label> labels = List.of(
-                getLabel("duck", "quack"),
-                getLabel("dog", "bark"),
-                getLabel("cat", "meow")
-        );
+    AllureLabelExtension extension = new AllureLabelExtension(labels);
 
-        String uuid = Allure.getLifecycle().getCurrentTestCase().orElseThrow();
+    extension.beforeEach(null);
 
-        AllureLabelExtension extension = new AllureLabelExtension(labels);
+    AtomicReference<TestResult> testResultAtomicReference = new AtomicReference<>();
+    Allure.getLifecycle().updateTestCase(uuid, testResultAtomicReference::set);
 
-        extension.beforeEach(null);
+    TestResult testResult = testResultAtomicReference.get();
 
-        AtomicReference<TestResult> testResultAtomicReference = new AtomicReference<>();
-        Allure.getLifecycle().updateTestCase(uuid, testResultAtomicReference::set);
+    assertTrue(testResult.getLabels().containsAll(labels));
+  }
 
-        TestResult testResult = testResultAtomicReference.get();
-
-        assertTrue(testResult.getLabels().containsAll(labels));
-    }
-
-    private Label getLabel(String name, String value) {
-        return new Label().setName(name).setValue(value);
-    }
+  private Label getLabel(String name, String value) {
+    return new Label().setName(name).setValue(value);
+  }
 }

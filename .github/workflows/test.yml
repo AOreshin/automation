@@ -1,4 +1,4 @@
-name: Test and verify coverage
+name: Test, check style and coverage
 
 on:
   pull_request:
@@ -16,10 +16,11 @@ jobs:
         with:
           java-version: 11
 
-      - name: Test, verify coverage
+      - name: Test, check style and coverage
         shell: bash
         run: ./gradlew
           test
+          spotlessJavaCheck
           jacocoTestCoverageVerification
           -PnexusUsername=${{ secrets.nexusUsername }}
           -PnexusPassword=${{ secrets.nexusPassword }}

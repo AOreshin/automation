@@ -1,5 +1,11 @@
 package com.github.aoreshin.allure.webdriver;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+import java.util.function.Function;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -12,156 +18,157 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.function.Function;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 class WebDriverPageObjectTests {
-    private static class ConcretePageObject extends WebDriverPageObject<ConcretePageObject> {}
-    private static class AnotherConcretePageObject extends WebDriverPageObject<AnotherConcretePageObject> {}
+  private static class ConcretePageObject extends WebDriverPageObject<ConcretePageObject> {}
 
-    @ParameterizedTest
-    @MethodSource("seePageProvider")
-    void seePage(WebDriverPageObject<ConcretePageObject> pageObject) {
-        assertDoesNotThrow(() -> pageObject.seePage(AnotherConcretePageObject.class));
-    }
+  private static class AnotherConcretePageObject
+      extends WebDriverPageObject<AnotherConcretePageObject> {}
 
-    @ParameterizedTest
-    @MethodSource("seePageProvider")
-    void seePageThrowsIfSameClass(WebDriverPageObject<ConcretePageObject> pageObject) {
-        assertThrows(AssertionError.class, () -> pageObject.seePage(ConcretePageObject.class));
-    }
+  @ParameterizedTest
+  @MethodSource("seePageProvider")
+  void seePage(WebDriverPageObject<ConcretePageObject> pageObject) {
+    assertDoesNotThrow(() -> pageObject.seePage(AnotherConcretePageObject.class));
+  }
 
-    @ParameterizedTest
-    @MethodSource("xpathAndValueProvider")
-    void sendKeys(WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath,
-                  String value) {
-        pageObject.sendKeys(xpath, value);
+  @ParameterizedTest
+  @MethodSource("seePageProvider")
+  void seePageThrowsIfSameClass(WebDriverPageObject<ConcretePageObject> pageObject) {
+    assertThrows(AssertionError.class, () -> pageObject.seePage(ConcretePageObject.class));
+  }
 
-        verify(webDriver, only()).findElement(By.xpath(xpath));
-        verify(webElement, only()).sendKeys(value);
-    }
+  @ParameterizedTest
+  @MethodSource("xpathAndValueProvider")
+  void sendKeys(
+      WebDriverPageObject<?> pageObject,
+      WebDriver webDriver,
+      WebElement webElement,
+      String xpath,
+      String value) {
+    pageObject.sendKeys(xpath, value);
 
-    @ParameterizedTest
-    @MethodSource("xpathAndValueProvider")
-    void click(WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
-        pageObject.click(xpath);
+    verify(webDriver, only()).findElement(By.xpath(xpath));
+    verify(webElement, only()).sendKeys(value);
+  }
 
-        verify(webDriver, only()).findElement(By.xpath(xpath));
-        verify(webElement, only()).click();
-    }
+  @ParameterizedTest
+  @MethodSource("xpathAndValueProvider")
+  void click(
+      WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
+    pageObject.click(xpath);
 
-    @ParameterizedTest
-    @MethodSource("xpathAndValueProvider")
-    void clear(WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
-        pageObject.clear(xpath);
+    verify(webDriver, only()).findElement(By.xpath(xpath));
+    verify(webElement, only()).click();
+  }
 
-        verify(webDriver, only()).findElement(By.xpath(xpath));
-        verify(webElement, only()).clear();
-    }
+  @ParameterizedTest
+  @MethodSource("xpathAndValueProvider")
+  void clear(
+      WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
+    pageObject.clear(xpath);
 
-    @ParameterizedTest
-    @MethodSource("webDriverAndXpathProvider")
-    void getWebElement(WebDriverPageObject<?> pageObject, WebDriver webDriver, String xpath) {
-        pageObject.getWebElement(xpath);
+    verify(webDriver, only()).findElement(By.xpath(xpath));
+    verify(webElement, only()).clear();
+  }
 
-        verify(webDriver, only()).findElement(By.xpath(xpath));
-    }
+  @ParameterizedTest
+  @MethodSource("webDriverAndXpathProvider")
+  void getWebElement(WebDriverPageObject<?> pageObject, WebDriver webDriver, String xpath) {
+    pageObject.getWebElement(xpath);
 
-    @ParameterizedTest
-    @MethodSource("webDriverAndXpathProvider")
-    void getWebElementList(WebDriverPageObject<?> pageObject, WebDriver webDriver, String xpath) {
-        pageObject.getWebElementList(xpath);
+    verify(webDriver, only()).findElement(By.xpath(xpath));
+  }
 
-        verify(webDriver, only()).findElements(By.xpath(xpath));
-    }
+  @ParameterizedTest
+  @MethodSource("webDriverAndXpathProvider")
+  void getWebElementList(WebDriverPageObject<?> pageObject, WebDriver webDriver, String xpath) {
+    pageObject.getWebElementList(xpath);
 
-    @ParameterizedTest
-    @MethodSource("xpathAndValueProvider")
-    void jsClick(WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
-        pageObject.jsClick(xpath);
+    verify(webDriver, only()).findElements(By.xpath(xpath));
+  }
 
-        verify(webDriver, times(1)).findElement(By.xpath(xpath));
-        verify(((JavascriptExecutor) webDriver), times(1))
-                .executeScript("arguments[0].click();", webElement);
-    }
+  @ParameterizedTest
+  @MethodSource("xpathAndValueProvider")
+  void jsClick(
+      WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
+    pageObject.jsClick(xpath);
 
-    @ParameterizedTest
-    @MethodSource("xpathAndValueProvider")
-    void scrollIntoView(WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
-        pageObject.scrollIntoView(xpath);
+    verify(webDriver, times(1)).findElement(By.xpath(xpath));
+    verify(((JavascriptExecutor) webDriver), times(1))
+        .executeScript("arguments[0].click();", webElement);
+  }
 
-        verify(webDriver, times(1)).findElement(By.xpath(xpath));
-        verify(((JavascriptExecutor) webDriver), times(1))
-                .executeScript("arguments[0].scrollIntoView(true);", webElement);
-    }
+  @ParameterizedTest
+  @MethodSource("xpathAndValueProvider")
+  void scrollIntoView(
+      WebDriverPageObject<?> pageObject, WebDriver webDriver, WebElement webElement, String xpath) {
+    pageObject.scrollIntoView(xpath);
 
-    @Test
-    void waitUntilPageIsLoaded() {
-        WebDriver webDriver = mock(ChromeDriver.class);
-        WebDriverWait webDriverWait = mock(WebDriverWait.class);
+    verify(webDriver, times(1)).findElement(By.xpath(xpath));
+    verify(((JavascriptExecutor) webDriver), times(1))
+        .executeScript("arguments[0].scrollIntoView(true);", webElement);
+  }
 
-        @SuppressWarnings("unchecked")
-        ArgumentCaptor<Function<WebDriver, Boolean>> captor =
-                ArgumentCaptor.forClass(Function.class);
+  @Test
+  void waitUntilPageIsLoaded() {
+    WebDriver webDriver = mock(ChromeDriver.class);
+    WebDriverWait webDriverWait = mock(WebDriverWait.class);
 
-        ConcretePageObject pageObject = new ConcretePageObject();
+    @SuppressWarnings("unchecked")
+    ArgumentCaptor<Function<WebDriver, Boolean>> captor = ArgumentCaptor.forClass(Function.class);
 
-        pageObject.driver = webDriver;
-        pageObject.driverWait = webDriverWait;
+    ConcretePageObject pageObject = new ConcretePageObject();
 
-        when(((JavascriptExecutor) webDriver).executeScript(any(), any())).thenReturn(false);
+    pageObject.driver = webDriver;
+    pageObject.driverWait = webDriverWait;
 
-        pageObject.waitUntilPageIsLoaded();
+    when(((JavascriptExecutor) webDriver).executeScript(any(), any())).thenReturn(false);
 
-        verify(webDriverWait, only()).until(captor.capture());
+    pageObject.waitUntilPageIsLoaded();
 
-        captor.getValue().apply(webDriver);
+    verify(webDriverWait, only()).until(captor.capture());
 
-        verify(((JavascriptExecutor) webDriver), only()).executeScript("return document.readyState");
-    }
+    captor.getValue().apply(webDriver);
 
-    private static Stream<Arguments> webDriverAndXpathProvider() {
-        String xpath = "someXpath";
+    verify(((JavascriptExecutor) webDriver), only()).executeScript("return document.readyState");
+  }
 
-        WebDriver webDriver = mock(WebDriver.class);
+  private static Stream<Arguments> webDriverAndXpathProvider() {
+    String xpath = "someXpath";
 
-        ConcretePageObject pageObject = new ConcretePageObject();
+    WebDriver webDriver = mock(WebDriver.class);
 
-        pageObject.driver = webDriver;
+    ConcretePageObject pageObject = new ConcretePageObject();
 
-        return Stream.of(Arguments.of(pageObject, webDriver, xpath));
-    }
+    pageObject.driver = webDriver;
 
-    private static Stream<Arguments> xpathAndValueProvider() {
-        String xpath = "someXpath";
-        String value = "someValue";
+    return Stream.of(Arguments.of(pageObject, webDriver, xpath));
+  }
 
-        WebDriver webDriver = mock(ChromeDriver.class);
-        WebElement webElement = mock(WebElement.class);
+  private static Stream<Arguments> xpathAndValueProvider() {
+    String xpath = "someXpath";
+    String value = "someValue";
 
-        when(webDriver.findElement(By.xpath(xpath))).thenReturn(webElement);
+    WebDriver webDriver = mock(ChromeDriver.class);
+    WebElement webElement = mock(WebElement.class);
 
-        ConcretePageObject pageObject = new ConcretePageObject();
+    when(webDriver.findElement(By.xpath(xpath))).thenReturn(webElement);
 
-        pageObject.driver = webDriver;
+    ConcretePageObject pageObject = new ConcretePageObject();
 
-        return Stream.of(Arguments.of(pageObject, webDriver, webElement, xpath, value));
-    }
+    pageObject.driver = webDriver;
 
-    private static Stream<Arguments> seePageProvider() {
-        WebDriver webDriver = mock(WebDriver.class);
-        WebDriverWait webDriverWait = mock(WebDriverWait.class);
+    return Stream.of(Arguments.of(pageObject, webDriver, webElement, xpath, value));
+  }
 
-        WebDriverPageObjectFactory factory =
-                new WebDriverPageObjectFactory(webDriver, webDriverWait);
+  private static Stream<Arguments> seePageProvider() {
+    WebDriver webDriver = mock(WebDriver.class);
+    WebDriverWait webDriverWait = mock(WebDriverWait.class);
 
-        WebDriverPageObject<ConcretePageObject> pageObject = factory
-                .createPageObject(ConcretePageObject.class);
+    WebDriverPageObjectFactory factory = new WebDriverPageObjectFactory(webDriver, webDriverWait);
 
-        return Stream.of(Arguments.of(pageObject));
-    }
+    WebDriverPageObject<ConcretePageObject> pageObject =
+        factory.createPageObject(ConcretePageObject.class);
+
+    return Stream.of(Arguments.of(pageObject));
+  }
 }

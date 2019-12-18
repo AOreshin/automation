@@ -21,3 +21,8 @@ jobs:
         run: ./gradlew
           test
           jacocoTestCoverageVerification
+          -PnexusUsername=${{ secrets.nexusUsername }}
+          -PnexusPassword=${{ secrets.nexusPassword }}
+          -Psigning.keyId=${{ secrets.signingKeyId }}
+          -Psigning.password=${{ secrets.signingPassword }}
+          -Psigning.secretKeyRingFile=$GITHUB_WORKSPACE/keys.gpg

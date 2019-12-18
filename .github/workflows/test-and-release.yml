@@ -16,7 +16,7 @@ jobs:
         with:
           java-version: 11
 
-      - name: Test, verify coverage, release
+      - name: Test, check style, coverage and release
         shell: bash
         run: ./gradlew
           test

@@ -9,10 +9,13 @@ buildscript {
 plugins {
     id 'de.marcphilipp.nexus-publish' version '0.4.0'
     id 'io.codearte.nexus-staging' version '0.21.1'
+    id 'net.nemerosa.versioning' version '2.8.2'
 }
 
-group = "com.github.aoreshin"
-version = '1.0.0.13'
+allprojects {
+    group = "com.github.aoreshin"
+    version = versioning.info.full
+}
 
 nexusStaging {
     numberOfRetries = 500
@@ -46,9 +49,9 @@ subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId = rootProject.group
+                groupId = project.group
                 artifactId = project.name
-                version = rootProject.version
+                version = project.version
 
                 from components.java
 

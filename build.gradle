@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.github.aoreshin"
-version = '1.0.0.12'
+version = '1.0.0.13'
 
 nexusStaging {
     numberOfRetries = 500
@@ -24,6 +24,11 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'jacoco'
+
+    java {
+        withJavadocJar()
+        withSourcesJar()
+    }
 
     nexusPublishing {
         Duration duration = Duration.ofMinutes(5)

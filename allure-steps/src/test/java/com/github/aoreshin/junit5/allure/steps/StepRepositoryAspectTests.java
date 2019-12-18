@@ -1,9 +1,14 @@
 package com.github.aoreshin.junit5.allure.steps;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.github.aoreshin.junit5.allure.steps.steprepositories.ButtonStepRepository;
 import com.github.aoreshin.junit5.allure.steps.steprepositories.FieldStepRepository;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.model.StepResult;
+import java.lang.reflect.Method;
+import java.util.stream.Stream;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.junit.jupiter.api.Test;
@@ -11,163 +16,163 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.lang.reflect.Method;
-import java.util.stream.Stream;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 final class StepRepositoryAspectTests {
-    private static class NoImplementedInterfaces {}
-    private static class SweetPageObject implements
-            ButtonStepRepository<SweetPageObject>, FieldStepRepository<SweetPageObject> {}
+  private static class NoImplementedInterfaces {}
 
-    @ParameterizedTest
-    @MethodSource("getMocks")
-    void processStepMethodNoImplementedStepRepositoriesTest(StepRepositoryAspect stepRepositoryAspect,
-                                                            AllureLifecycle lifecycle,
-                                                            ProceedingJoinPoint proceedingJoinPoint,
-                                                            Method method) throws Throwable {
-        Object[] args = new Object[]{1, 2, 3};
+  private static class SweetPageObject
+      implements ButtonStepRepository<SweetPageObject>, FieldStepRepository<SweetPageObject> {}
 
-        when(proceedingJoinPoint.getArgs()).thenReturn(args);
-        doReturn(NoImplementedInterfaces.class).when(method).getDeclaringClass();
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void processStepMethodNoImplementedStepRepositoriesTest(
+      StepRepositoryAspect stepRepositoryAspect,
+      AllureLifecycle lifecycle,
+      ProceedingJoinPoint proceedingJoinPoint,
+      Method method)
+      throws Throwable {
+    Object[] args = new Object[] {1, 2, 3};
 
-        stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
+    when(proceedingJoinPoint.getArgs()).thenReturn(args);
+    doReturn(NoImplementedInterfaces.class).when(method).getDeclaringClass();
 
-        verifyStepsAreNotCreated(lifecycle);
-        verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
-    }
+    stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    @ParameterizedTest
-    @MethodSource("getMocks")
-    void processStepMethodNotFoundInStepRepositoriesTest(StepRepositoryAspect stepRepositoryAspect,
-                                                         AllureLifecycle lifecycle,
-                                                         ProceedingJoinPoint proceedingJoinPoint,
-                                                         Method method) throws Throwable {
-        String methodName = "blah";
-        Object[] args = new Object[]{1, 2, 3};
-        Class<?>[] parameterTypes = new Class<?>[]{Integer.class, Integer.class, Integer.class};
+    verifyStepsAreNotCreated(lifecycle);
+    verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
+  }
 
-        when(proceedingJoinPoint.getArgs()).thenReturn(args);
-        when(method.getName()).thenReturn(methodName);
-        when(method.getParameterTypes()).thenReturn(parameterTypes);
-        doReturn(SweetPageObject.class).when(method).getDeclaringClass();
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void processStepMethodNotFoundInStepRepositoriesTest(
+      StepRepositoryAspect stepRepositoryAspect,
+      AllureLifecycle lifecycle,
+      ProceedingJoinPoint proceedingJoinPoint,
+      Method method)
+      throws Throwable {
+    String methodName = "blah";
+    Object[] args = new Object[] {1, 2, 3};
+    Class<?>[] parameterTypes = new Class<?>[] {Integer.class, Integer.class, Integer.class};
 
-        stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
+    when(proceedingJoinPoint.getArgs()).thenReturn(args);
+    when(method.getName()).thenReturn(methodName);
+    when(method.getParameterTypes()).thenReturn(parameterTypes);
+    doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-        verifyStepsAreNotCreated(lifecycle);
-        verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
-    }
+    stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    @ParameterizedTest
-    @MethodSource("getMocks")
-    void processStepMethodImplementedStepRepositoriesTest(StepRepositoryAspect stepRepositoryAspect,
-                                                          AllureLifecycle lifecycle,
-                                                          ProceedingJoinPoint proceedingJoinPoint,
-                                                          Method method,
-                                                          MethodSignature methodSignature) throws Throwable {
-        String methodName = "clickButton";
-        String[] parameterNames = new String[]{"name"};
-        Class<?>[] parameterTypes = new Class<?>[]{String.class};
-        Object[] args = new Object[]{"F to pay respects"};
+    verifyStepsAreNotCreated(lifecycle);
+    verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
+  }
 
-        when(proceedingJoinPoint.getArgs()).thenReturn(args);
-        when(methodSignature.getParameterNames()).thenReturn(parameterNames);
-        when(method.getName()).thenReturn(methodName);
-        when(method.getParameterTypes()).thenReturn(parameterTypes);
-        doReturn(SweetPageObject.class).when(method).getDeclaringClass();
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void processStepMethodImplementedStepRepositoriesTest(
+      StepRepositoryAspect stepRepositoryAspect,
+      AllureLifecycle lifecycle,
+      ProceedingJoinPoint proceedingJoinPoint,
+      Method method,
+      MethodSignature methodSignature)
+      throws Throwable {
+    String methodName = "clickButton";
+    String[] parameterNames = new String[] {"name"};
+    Class<?>[] parameterTypes = new Class<?>[] {String.class};
+    Object[] args = new Object[] {"F to pay respects"};
 
-        stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
+    when(proceedingJoinPoint.getArgs()).thenReturn(args);
+    when(methodSignature.getParameterNames()).thenReturn(parameterNames);
+    when(method.getName()).thenReturn(methodName);
+    when(method.getParameterTypes()).thenReturn(parameterTypes);
+    doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-        verifyStepsAreCreated(lifecycle);
-        verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
-    }
+    stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    @ParameterizedTest
-    @MethodSource("getMocks")
-    void processStepMethodThrowsExceptionTest(StepRepositoryAspect stepRepositoryAspect,
-                                              AllureLifecycle lifecycle,
-                                              ProceedingJoinPoint proceedingJoinPoint,
-                                              Method method,
-                                              MethodSignature methodSignature) throws Throwable {
-        class VeryScaryException extends RuntimeException {}
+    verifyStepsAreCreated(lifecycle);
+    verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
+  }
 
-        String methodName = "clickButton";
-        String[] parameterNames = new String[]{"name"};
-        Class<?>[] parameterTypes = new Class<?>[]{String.class};
-        Object[] args = new Object[]{"F to pay respects"};
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void processStepMethodThrowsExceptionTest(
+      StepRepositoryAspect stepRepositoryAspect,
+      AllureLifecycle lifecycle,
+      ProceedingJoinPoint proceedingJoinPoint,
+      Method method,
+      MethodSignature methodSignature)
+      throws Throwable {
+    class VeryScaryException extends RuntimeException {}
 
-        when(proceedingJoinPoint.getArgs()).thenReturn(args);
-        when(proceedingJoinPoint.proceed(args)).thenThrow(VeryScaryException.class);
-        when(methodSignature.getParameterNames()).thenReturn(parameterNames);
-        when(method.getName()).thenReturn(methodName);
-        when(method.getParameterTypes()).thenReturn(parameterTypes);
-        doReturn(SweetPageObject.class).when(method).getDeclaringClass();
+    String methodName = "clickButton";
+    String[] parameterNames = new String[] {"name"};
+    Class<?>[] parameterTypes = new Class<?>[] {String.class};
+    Object[] args = new Object[] {"F to pay respects"};
 
-        assertThrows(VeryScaryException.class, () ->
-                stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint));
+    when(proceedingJoinPoint.getArgs()).thenReturn(args);
+    when(proceedingJoinPoint.proceed(args)).thenThrow(VeryScaryException.class);
+    when(methodSignature.getParameterNames()).thenReturn(parameterNames);
+    when(method.getName()).thenReturn(methodName);
+    when(method.getParameterTypes()).thenReturn(parameterTypes);
+    doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-        verifyStepsAreCreated(lifecycle);
-        verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
-    }
+    assertThrows(
+        VeryScaryException.class,
+        () -> stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint));
 
-    @Test
-    void anyPublicMethodTest() {
-        assertDoesNotThrow(() -> new StepRepositoryAspect().anyPublicMethod());
-    }
+    verifyStepsAreCreated(lifecycle);
+    verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
+  }
 
-    @Test
-    void withAnnotationTest() {
-        assertDoesNotThrow(() -> new StepRepositoryAspect().withAnnotation());
-    }
+  @Test
+  void anyPublicMethodTest() {
+    assertDoesNotThrow(() -> new StepRepositoryAspect().anyPublicMethod());
+  }
 
-    private void verifyStepsAreCreated(AllureLifecycle lifecycle) {
-        verify(lifecycle, times(1)).startStep(anyString(), any(StepResult.class));
-        verify(lifecycle, times(1)).updateStep(any());
-        verify(lifecycle, times(1)).stopStep();
+  @Test
+  void withAnnotationTest() {
+    assertDoesNotThrow(() -> new StepRepositoryAspect().withAnnotation());
+  }
 
-        verify(lifecycle, never()).startStep(anyString(), anyString(), any(StepResult.class));
-        verify(lifecycle, never()).updateStep(any(), any());
-        verify(lifecycle, never()).stopStep(anyString());
-    }
+  private void verifyStepsAreCreated(AllureLifecycle lifecycle) {
+    verify(lifecycle, times(1)).startStep(anyString(), any(StepResult.class));
+    verify(lifecycle, times(1)).updateStep(any());
+    verify(lifecycle, times(1)).stopStep();
 
-    private void verifyInterceptedMethodRunsOnlyOneTime(ProceedingJoinPoint proceedingJoinPoint, Object[] args)
-            throws Throwable {
-        verify(proceedingJoinPoint, never()).proceed();
-        verify(proceedingJoinPoint, times(1)).proceed(args);
-    }
+    verify(lifecycle, never()).startStep(anyString(), anyString(), any(StepResult.class));
+    verify(lifecycle, never()).updateStep(any(), any());
+    verify(lifecycle, never()).stopStep(anyString());
+  }
 
-    private void verifyStepsAreNotCreated(AllureLifecycle lifecycle) {
-        verify(lifecycle, never()).startStep(anyString(), any(StepResult.class));
-        verify(lifecycle, never()).startStep(anyString(), anyString(), any(StepResult.class));
+  private void verifyInterceptedMethodRunsOnlyOneTime(
+      ProceedingJoinPoint proceedingJoinPoint, Object[] args) throws Throwable {
+    verify(proceedingJoinPoint, never()).proceed();
+    verify(proceedingJoinPoint, times(1)).proceed(args);
+  }
 
-        verify(lifecycle, never()).updateStep(any());
-        verify(lifecycle, never()).updateStep(any(), any());
+  private void verifyStepsAreNotCreated(AllureLifecycle lifecycle) {
+    verify(lifecycle, never()).startStep(anyString(), any(StepResult.class));
+    verify(lifecycle, never()).startStep(anyString(), anyString(), any(StepResult.class));
 
-        verify(lifecycle, never()).stopStep();
-        verify(lifecycle, never()).stopStep(anyString());
-    }
+    verify(lifecycle, never()).updateStep(any());
+    verify(lifecycle, never()).updateStep(any(), any());
 
-    private static Stream<Arguments> getMocks() {
-        StepRepositoryAspect stepRepositoryAspect = spy(StepRepositoryAspect.class);
-        AllureLifecycle allureLifecycle = mock(AllureLifecycle.class);
-        ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
-        MethodSignature methodSignature = mock(MethodSignature.class);
-        Method method = mock(Method.class);
+    verify(lifecycle, never()).stopStep();
+    verify(lifecycle, never()).stopStep(anyString());
+  }
 
-        when(stepRepositoryAspect.getLifecycle()).thenReturn(allureLifecycle);
-        when(proceedingJoinPoint.getSignature()).thenReturn(methodSignature);
-        when(methodSignature.getMethod()).thenReturn(method);
+  private static Stream<Arguments> getMocks() {
+    StepRepositoryAspect stepRepositoryAspect = spy(StepRepositoryAspect.class);
+    AllureLifecycle allureLifecycle = mock(AllureLifecycle.class);
+    ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
+    MethodSignature methodSignature = mock(MethodSignature.class);
+    Method method = mock(Method.class);
 
-        assertFalse(stepRepositoryAspect.getStepRepositoryInterfaces().isEmpty());
+    when(stepRepositoryAspect.getLifecycle()).thenReturn(allureLifecycle);
+    when(proceedingJoinPoint.getSignature()).thenReturn(methodSignature);
+    when(methodSignature.getMethod()).thenReturn(method);
 
-        return Stream.of(Arguments.of(
-                stepRepositoryAspect,
-                allureLifecycle,
-                proceedingJoinPoint,
-                method,
-                methodSignature
-        ));
-    }
+    assertFalse(stepRepositoryAspect.getStepRepositoryInterfaces().isEmpty());
+
+    return Stream.of(
+        Arguments.of(
+            stepRepositoryAspect, allureLifecycle, proceedingJoinPoint, method, methodSignature));
+  }
 }

@@ -1,4 +1,4 @@
-name: Test and release
+name: Test, check style, coverage and release
 
 on:
   push:
@@ -20,6 +20,7 @@ jobs:
         shell: bash
         run: ./gradlew
           test
+          spotlessJavaCheck
           jacocoTestCoverageVerification
           signMavenJavaPublication
           publishAllPublicationsToSonatypeRepository

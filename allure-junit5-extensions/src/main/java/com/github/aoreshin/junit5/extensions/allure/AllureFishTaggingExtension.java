@@ -7,13 +7,13 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 public final class AllureFishTaggingExtension implements BeforeEachCallback, AfterEachCallback {
-    @Override
-    public void beforeEach(ExtensionContext context) {
-        ThreadContext.put("id", Allure.getLifecycle().getCurrentTestCase().orElseThrow());
-    }
+  @Override
+  public void beforeEach(ExtensionContext context) {
+    ThreadContext.put("id", Allure.getLifecycle().getCurrentTestCase().orElseThrow());
+  }
 
-    @Override
-    public void afterEach(ExtensionContext context) {
-        ThreadContext.clearMap();
-    }
+  @Override
+  public void afterEach(ExtensionContext context) {
+    ThreadContext.clearMap();
+  }
 }

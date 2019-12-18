@@ -1,147 +1,146 @@
 package com.github.aoreshin.allure.webdriver;
 
-import io.qameta.allure.AllureLifecycle;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
-
-import java.lang.reflect.Parameter;
-import java.util.Set;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import io.qameta.allure.AllureLifecycle;
+import java.lang.reflect.Parameter;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ParameterContext;
+
 class WebDriverPageObjectFactoryCallbacksTests {
-    private static class FirstPageObject extends WebDriverPageObject<FirstPageObject> {}
-    private static class SecondPageObject extends WebDriverPageObject<SecondPageObject> {}
+  private static class FirstPageObject extends WebDriverPageObject<FirstPageObject> {}
 
-    @Test
-    void afterEach() {
-        WebDriverPageObjectFactory factory =
-                mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
+  private static class SecondPageObject extends WebDriverPageObject<SecondPageObject> {}
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(null, factory);
+  @Test
+  void afterEach() {
+    WebDriverPageObjectFactory factory =
+        mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
 
-        callbacks.afterEach(null);
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(null, factory);
 
-        verify(factory, only()).shutdown();
-    }
+    callbacks.afterEach(null);
 
-    @Test
-    void supportsParameterTrue() {
-        Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet =
-                Set.of(FirstPageObject.class, SecondPageObject.class);
+    verify(factory, only()).shutdown();
+  }
 
-        ParameterContext parameterContext = mock(ParameterContext.class);
-        Parameter parameter = mock(Parameter.class);
+  @Test
+  void supportsParameterTrue() {
+    Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet =
+        Set.of(FirstPageObject.class, SecondPageObject.class);
 
-        when(parameterContext.getParameter()).thenReturn(parameter);
-        doReturn(FirstPageObject.class).when(parameter).getType();
+    ParameterContext parameterContext = mock(ParameterContext.class);
+    Parameter parameter = mock(Parameter.class);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
+    when(parameterContext.getParameter()).thenReturn(parameter);
+    doReturn(FirstPageObject.class).when(parameter).getType();
 
-        assertTrue(callbacks.supportsParameter(parameterContext, null));
-    }
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
 
-    @Test
-    void supportsParameterFalseEmptySet() {
-        Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet = Set.of();
+    assertTrue(callbacks.supportsParameter(parameterContext, null));
+  }
 
-        ParameterContext parameterContext = mock(ParameterContext.class);
-        Parameter parameter = mock(Parameter.class);
+  @Test
+  void supportsParameterFalseEmptySet() {
+    Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet = Set.of();
 
-        when(parameterContext.getParameter()).thenReturn(parameter);
-        doReturn(FirstPageObject.class).when(parameter).getType();
+    ParameterContext parameterContext = mock(ParameterContext.class);
+    Parameter parameter = mock(Parameter.class);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
+    when(parameterContext.getParameter()).thenReturn(parameter);
+    doReturn(FirstPageObject.class).when(parameter).getType();
 
-        assertFalse(callbacks.supportsParameter(parameterContext, null));
-    }
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
 
-    @Test
-    void supportsParameterFalse() {
-        Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet =
-                Set.of(SecondPageObject.class);
+    assertFalse(callbacks.supportsParameter(parameterContext, null));
+  }
 
-        ParameterContext parameterContext = mock(ParameterContext.class);
-        Parameter parameter = mock(Parameter.class);
+  @Test
+  void supportsParameterFalse() {
+    Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet =
+        Set.of(SecondPageObject.class);
 
-        when(parameterContext.getParameter()).thenReturn(parameter);
-        doReturn(FirstPageObject.class).when(parameter).getType();
+    ParameterContext parameterContext = mock(ParameterContext.class);
+    Parameter parameter = mock(Parameter.class);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
+    when(parameterContext.getParameter()).thenReturn(parameter);
+    doReturn(FirstPageObject.class).when(parameter).getType();
 
-        assertFalse(callbacks.supportsParameter(parameterContext, null));
-    }
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(pageObjectClassSet, null);
 
-    @Test
-    void resolveParameter() {
-        //Fixture setup
-        WebDriverPageObjectFactory factory =
-                mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
+    assertFalse(callbacks.supportsParameter(parameterContext, null));
+  }
 
-        ParameterContext parameterContext = mock(ParameterContext.class);
-        Parameter parameter = mock(Parameter.class);
+  @Test
+  void resolveParameter() {
+    // Fixture setup
+    WebDriverPageObjectFactory factory =
+        mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
 
-        when(parameterContext.getParameter()).thenReturn(parameter);
-        doReturn(FirstPageObject.class).when(parameter).getType();
+    ParameterContext parameterContext = mock(ParameterContext.class);
+    Parameter parameter = mock(Parameter.class);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(null, factory);
+    when(parameterContext.getParameter()).thenReturn(parameter);
+    doReturn(FirstPageObject.class).when(parameter).getType();
 
-        //Executing SUT
-        callbacks.resolveParameter(parameterContext, null);
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(null, factory);
 
-        verify(factory, only()).createPageObject(FirstPageObject.class);
-    }
+    // Executing SUT
+    callbacks.resolveParameter(parameterContext, null);
 
-    @Test
-    void resolveParameterFail() {
-        //Fixture setup
-        WebDriverPageObjectFactory factory =
-                new WebDriverPageObjectFactory(null, null);
+    verify(factory, only()).createPageObject(FirstPageObject.class);
+  }
 
-        ParameterContext parameterContext = mock(ParameterContext.class);
-        Parameter parameter = mock(Parameter.class);
+  @Test
+  void resolveParameterFail() {
+    // Fixture setup
+    WebDriverPageObjectFactory factory = new WebDriverPageObjectFactory(null, null);
 
-        when(parameterContext.getParameter()).thenReturn(parameter);
-        doReturn(Integer.class).when(parameter).getType();
+    ParameterContext parameterContext = mock(ParameterContext.class);
+    Parameter parameter = mock(Parameter.class);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                new WebDriverPageObjectFactoryCallbacks(null, factory);
+    when(parameterContext.getParameter()).thenReturn(parameter);
+    doReturn(Integer.class).when(parameter).getType();
 
-        assertThrows(WebDriverPageObjectFactory.PageNotInitializedException.class,
-                () -> callbacks.resolveParameter(parameterContext, null));
-    }
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(null, factory);
 
-    @Test
-    void handleTestExecutionException() {
-        class FatalException extends RuntimeException {}
+    assertThrows(
+        WebDriverPageObjectFactory.PageNotInitializedException.class,
+        () -> callbacks.resolveParameter(parameterContext, null));
+  }
 
-        //Fixture setup
-        byte[] screenshot = new byte[]{1, 2, 3, 4, 5};
+  @Test
+  void handleTestExecutionException() {
+    class FatalException extends RuntimeException {}
 
-        WebDriverPageObjectFactory factory = mock(WebDriverPageObjectFactory.class);
-        when(factory.makeScreenshot()).thenReturn(screenshot);
+    // Fixture setup
+    byte[] screenshot = new byte[] {1, 2, 3, 4, 5};
 
-        AllureLifecycle lifecycle = mock(AllureLifecycle.class);
+    WebDriverPageObjectFactory factory = mock(WebDriverPageObjectFactory.class);
+    when(factory.makeScreenshot()).thenReturn(screenshot);
 
-        WebDriverPageObjectFactoryCallbacks callbacks =
-                spy(new WebDriverPageObjectFactoryCallbacks(null, factory));
+    AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
-        when(callbacks.lifecycle()).thenReturn(lifecycle);
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        spy(new WebDriverPageObjectFactoryCallbacks(null, factory));
 
-        FatalException exception = new FatalException();
+    when(callbacks.lifecycle()).thenReturn(lifecycle);
 
-        //Executing SUT
-        assertThrows(FatalException.class,
-                () -> callbacks.handleTestExecutionException(null, exception));
+    FatalException exception = new FatalException();
 
-        verify(factory, only()).makeScreenshot();
-        verify(lifecycle, only())
-                .addAttachment("Screenshot", "image/png", "", screenshot);
-    }
+    // Executing SUT
+    assertThrows(
+        FatalException.class, () -> callbacks.handleTestExecutionException(null, exception));
+
+    verify(factory, only()).makeScreenshot();
+    verify(lifecycle, only()).addAttachment("Screenshot", "image/png", "", screenshot);
+  }
 }

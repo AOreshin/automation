@@ -1,9 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 final class DropdownStepRepositoryTests {
@@ -14,28 +12,22 @@ final class DropdownStepRepositoryTests {
 
   @Test
   void clearDropdownTest() {
-    assertThrows(
-        NotImplementedException.class, () -> dropdownStepRepository.clearDropdownList("blah"));
+    assertThrowsNotImplemented(() -> dropdownStepRepository.clearDropdownList(NAME));
   }
 
   @Test
   void clearDropdownListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> dropdownStepRepository.clearDropdownList(List.of("blah")));
+    assertThrowsNotImplemented(() -> dropdownStepRepository.clearDropdownList(NAME_LIST));
   }
 
   @Test
   void checkButtonIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> dropdownStepRepository.selectFromDropdownList("blah", "blah-blah"));
+    assertThrowsNotImplemented(() -> dropdownStepRepository.selectFromDropdownList(NAME, VALUE));
   }
 
   @Test
   void checkButtonIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> dropdownStepRepository.selectFromDropdownList(Map.of("blah", "blah-blah")));
+    assertThrowsNotImplemented(
+        () -> dropdownStepRepository.selectFromDropdownList(NAMES_AND_VALUES));
   }
 }

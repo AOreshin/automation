@@ -101,6 +101,14 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("builderMockProvider")
+  void post(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+    apiRequestSteps.post(url);
+
+    verify(builder, only()).build();
+  }
+
+  @ParameterizedTest
+  @MethodSource("builderMockProvider")
   void put(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.put(url);
 

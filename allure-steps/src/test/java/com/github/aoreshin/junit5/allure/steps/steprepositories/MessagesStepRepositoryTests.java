@@ -1,8 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 final class MessagesStepRepositoryTests {
@@ -13,40 +12,31 @@ final class MessagesStepRepositoryTests {
 
   @Test
   void errorIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class, () -> messagesStepRepository.errorIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> messagesStepRepository.errorIsDisplayed(NAME));
   }
 
   @Test
   void errorIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> messagesStepRepository.errorIsDisplayed(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> messagesStepRepository.errorIsDisplayed(NAME_LIST));
   }
 
   @Test
   void textIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class, () -> messagesStepRepository.textIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> messagesStepRepository.textIsDisplayed(NAME));
   }
 
   @Test
   void textIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> messagesStepRepository.textIsDisplayed(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> messagesStepRepository.textIsDisplayed(NAME_LIST));
   }
 
   @Test
   void warningIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class, () -> messagesStepRepository.warningIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> messagesStepRepository.warningIsDisplayed(NAME));
   }
 
   @Test
   void warningIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> messagesStepRepository.warningIsDisplayed(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> messagesStepRepository.warningIsDisplayed(NAME_LIST));
   }
 }

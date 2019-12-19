@@ -15,7 +15,7 @@ plugins {
 
 allprojects {
     group = "com.github.aoreshin"
-    version = versioning.info.full
+    version = versioning.info.display
 }
 
 nexusStaging {
@@ -127,11 +127,16 @@ subprojects {
     jacocoTestCoverageVerification {
         violationRules {
             rule {
+                element = 'CLASS'
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
-                    minimum = 0.9
+                    minimum = 1.0
                 }
+                excludes = [
+                    'com.github.aoreshin.junit5.allure.steps.StepRepositoryAspect',
+                    'com.github.aoreshin.junit5.extensions.DisplayNameExecutionConditionUtil'
+                ]
             }
         }
     }

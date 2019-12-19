@@ -1,6 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.NAME;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.assertThrowsNotImplemented;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,12 +12,11 @@ final class WebStepRepositoryTests {
 
   @Test
   void openUrlTest() {
-    assertThrows(NotImplementedException.class, () -> webStepRepository.openUrl("blah"));
+    assertThrowsNotImplemented(() -> webStepRepository.openUrl("blah"));
   }
 
   @Test
   void checkFormIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class, () -> webStepRepository.checkFormIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> webStepRepository.checkFormIsDisplayed(NAME));
   }
 }

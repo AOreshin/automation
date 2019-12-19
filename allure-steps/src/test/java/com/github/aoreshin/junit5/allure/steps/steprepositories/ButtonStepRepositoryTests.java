@@ -1,8 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 final class ButtonStepRepositoryTests {
@@ -13,25 +12,21 @@ final class ButtonStepRepositoryTests {
 
   @Test
   void clickButtonTest() {
-    assertThrows(NotImplementedException.class, () -> buttonStepRepository.clickButton("blah"));
+    assertThrowsNotImplemented(() -> buttonStepRepository.clickButton(NAME));
   }
 
   @Test
   void clickButtonListTest() {
-    assertThrows(
-        NotImplementedException.class, () -> buttonStepRepository.clickButton(List.of("blah")));
+    assertThrowsNotImplemented(() -> buttonStepRepository.clickButton(NAME_LIST));
   }
 
   @Test
   void checkButtonIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class, () -> buttonStepRepository.checkButtonIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> buttonStepRepository.checkButtonIsDisplayed(NAME));
   }
 
   @Test
   void checkButtonIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> buttonStepRepository.checkButtonIsDisplayed(List.of("blah")));
+    assertThrowsNotImplemented(() -> buttonStepRepository.checkButtonIsDisplayed(NAME_LIST));
   }
 }

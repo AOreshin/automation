@@ -1,6 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.NAME;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.assertThrowsNotImplemented;
 
 import java.util.Comparator;
 import org.junit.jupiter.api.Test;
@@ -14,28 +15,25 @@ final class TableSortingStepRepositoryTests {
 
   @Test
   void checkColumnSortedTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () ->
             tableSortingStepRepository.checkColumnSorted(
-                "blah", TableSortingStepRepository.Sorting.ASCENDING, Comparator.naturalOrder()));
+                NAME, TableSortingStepRepository.Sorting.ASCENDING, Comparator.naturalOrder()));
   }
 
   @Test
   void checkFilterContainsValueMapTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () ->
             tableSortingStepRepository.checkDateColumnSorted(
-                "blah", TableSortingStepRepository.Sorting.ASCENDING));
+                NAME, TableSortingStepRepository.Sorting.ASCENDING));
   }
 
   @Test
   void checkDateColumnSortedComparatorTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () ->
             tableSortingStepRepository.checkDateColumnSorted(
-                "blah", TableSortingStepRepository.Sorting.ASCENDING, null, null));
+                NAME, TableSortingStepRepository.Sorting.ASCENDING, null, null));
   }
 }

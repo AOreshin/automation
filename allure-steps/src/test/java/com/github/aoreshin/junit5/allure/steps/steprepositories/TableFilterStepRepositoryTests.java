@@ -1,8 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -15,81 +14,63 @@ final class TableFilterStepRepositoryTests {
 
   @Test
   void checkFilterContainsValueTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () -> tableFilterStepRepository.checkFilterContainsValue("blah", "blah"));
   }
 
   @Test
   void checkFilterContainsValueMapTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () -> tableFilterStepRepository.checkFilterContainsValue(Map.of("blah", "blah")));
   }
 
   @Test
   void checkFilterIsEmptyTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableFilterStepRepository.checkFilterIsEmpty("blah"));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.checkFilterIsEmpty(NAME));
   }
 
   @Test
   void checkFilterIsEmptyListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.checkFilterIsEmpty(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.checkFilterIsEmpty(NAME_LIST));
   }
 
   @Test
   void clearFilterTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableFilterStepRepository.clearFilter("blah"));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.clearFilter(NAME));
   }
 
   @Test
   void clearFilterListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.clearFilter(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.clearFilter(NAME_LIST));
   }
 
   @Test
   void deselectFilterTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableFilterStepRepository.deselectFilter("blah"));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.deselectFilter(NAME));
   }
 
   @Test
   void deselectFilterListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.deselectFilter(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.deselectFilter(NAME_LIST));
   }
 
   @Test
   void fillFilterTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableFilterStepRepository.fillFilter("blah", "blah"));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.fillFilter(NAME, VALUE));
   }
 
   @Test
   void fillFilterMapTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.fillFilter(Map.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.fillFilter(NAMES_AND_VALUES));
   }
 
   @Test
   void selectFromFilterTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.selectFromFilter("blah", "blah"));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.selectFromFilter(NAME, VALUE));
   }
 
   @Test
   void selectFromFilterMapTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableFilterStepRepository.selectFromFilter(Map.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> tableFilterStepRepository.selectFromFilter(NAMES_AND_VALUES));
   }
 }

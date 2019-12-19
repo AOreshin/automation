@@ -9,21 +9,21 @@ import java.util.Map;
 public interface DropdownStepRepository<T> {
   @Step("Выбор {value} из выпадающего списка {name}")
   default T selectFromDropdownList(final String name, final String value) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   @Step("Выбор соответствующих значений из выпадающего списка {values}")
   default T selectFromDropdownList(final Map<String, String> values) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   @Step("Очистка выпадающего списка {name}")
   default T clearDropdownList(final String name) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   @Step("Очистка выпадающих списков {names}")
   default T clearDropdownList(final List<String> names) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 }

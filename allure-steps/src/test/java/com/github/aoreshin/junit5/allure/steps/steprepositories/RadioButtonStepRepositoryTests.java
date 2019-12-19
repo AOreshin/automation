@@ -1,8 +1,7 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 final class RadioButtonStepRepositoryTests {
@@ -14,56 +13,44 @@ final class RadioButtonStepRepositoryTests {
 
   @Test
   void checkRadioButtonIsDisplayedTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsDisplayed("blah"));
+    assertThrowsNotImplemented(() -> radioButtonStepRepository.checkRadioButtonIsDisplayed(NAME));
   }
 
   @Test
   void checkRadioButtonIsDisplayedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsDisplayed(List.of("blah")));
+    assertThrowsNotImplemented(
+        () -> radioButtonStepRepository.checkRadioButtonIsDisplayed(NAME_LIST));
   }
 
   @Test
   void checkRadioButtonIsNotSelectedTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsNotSelected("blah"));
+    assertThrowsNotImplemented(() -> radioButtonStepRepository.checkRadioButtonIsNotSelected(NAME));
   }
 
   @Test
   void checkRadioButtonIsNotSelectedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsNotSelected(List.of("blah")));
+    assertThrowsNotImplemented(
+        () -> radioButtonStepRepository.checkRadioButtonIsNotSelected(NAME_LIST));
   }
 
   @Test
   void checkRadioButtonIsSelectedTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsSelected("blah"));
+    assertThrowsNotImplemented(() -> radioButtonStepRepository.checkRadioButtonIsSelected(NAME));
   }
 
   @Test
   void checkRadioButtonIsSelectedListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.checkRadioButtonIsSelected(List.of("blah")));
+    assertThrowsNotImplemented(
+        () -> radioButtonStepRepository.checkRadioButtonIsSelected(NAME_LIST));
   }
 
   @Test
   void clickRadioButtonTest() {
-    assertThrows(
-        NotImplementedException.class, () -> radioButtonStepRepository.clickRadioButton("blah"));
+    assertThrowsNotImplemented(() -> radioButtonStepRepository.clickRadioButton(NAME));
   }
 
   @Test
   void clickRadioButtonListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> radioButtonStepRepository.clickRadioButton(List.of("blah")));
+    assertThrowsNotImplemented(() -> radioButtonStepRepository.clickRadioButton(NAME_LIST));
   }
 }

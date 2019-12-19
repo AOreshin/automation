@@ -59,9 +59,14 @@ public final class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return this;
   }
 
+  @Step("Отправка POST запроса на {url}")
+  public ApiValidationSteps post(String url) {
+    return new ApiValidationSteps(given(requestSpecBuilder.build()).post(url));
+  }
+
   @Step("Отправка PUT запроса на {url}")
   public ApiValidationSteps put(String url) {
-    return new ApiValidationSteps(given(requestSpecBuilder.build()).get(url));
+    return new ApiValidationSteps(given(requestSpecBuilder.build()).put(url));
   }
 
   @Step("Отправка GET запроса на {url}")

@@ -1,9 +1,8 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
 import java.util.HashMap;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 
 final class TableStepRepositoryTests {
@@ -14,92 +13,78 @@ final class TableStepRepositoryTests {
 
   @Test
   void checkCellContainsValueTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableStepRepository.checkCellContainsValue("blah", "blah", 0));
+    assertThrowsNotImplemented(() -> tableStepRepository.checkCellContainsValue(NAME, VALUE, 0));
   }
 
   @Test
   void checkColumnContainsValueTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableStepRepository.checkColumnContainsValue("blah", "blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.checkColumnContainsValue(NAME, VALUE));
   }
 
   @Test
   void checkColumnDoesntContainValueTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableStepRepository.checkColumnDoesntContainValue("blah", "blah"));
+    assertThrowsNotImplemented(
+        () -> tableStepRepository.checkColumnDoesntContainValue(NAME, VALUE));
   }
 
   @Test
   void checkColumnIsEmptyTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.checkColumnIsEmpty("blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.checkColumnIsEmpty(NAME));
   }
 
   @Test
   void checkColumnIsNotEmptyTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.checkColumnIsNotEmpty("blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.checkColumnIsNotEmpty(NAME));
   }
 
   @Test
   void checkColumnSizeTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.checkColumnSize("blah", 0));
+    assertThrowsNotImplemented(() -> tableStepRepository.checkColumnSize(NAME, 0));
   }
 
   @Test
   void checkTableIsEmptyTest() {
-    assertThrows(NotImplementedException.class, tableStepRepository::checkTableIsEmpty);
+    assertThrowsNotImplemented(tableStepRepository::checkTableIsEmpty);
   }
 
   @Test
   void clickOnEntryRowTest() {
-    assertThrows(NotImplementedException.class, () -> tableStepRepository.clickOnEntry("blah", 0));
+    assertThrowsNotImplemented(() -> tableStepRepository.clickOnEntry(NAME, 0));
   }
 
   @Test
   void clickOnEntryValueTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.clickOnEntry("blah", "blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.clickOnEntry(NAME, VALUE));
   }
 
   @Test
   void clickOnHeaderTest() {
-    assertThrows(NotImplementedException.class, () -> tableStepRepository.clickOnHeader("blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.clickOnHeader(NAME));
   }
 
   @Test
   void clickOnHeaderListTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.clickOnHeader(List.of("blah")));
+    assertThrowsNotImplemented(() -> tableStepRepository.clickOnHeader(NAME_LIST));
   }
 
   @Test
   void headerIsPresentTest() {
-    assertThrows(NotImplementedException.class, () -> tableStepRepository.headerIsPresent("blah"));
+    assertThrowsNotImplemented(() -> tableStepRepository.headerIsPresent(NAME));
   }
 
   @Test
   void headerIsPresentListTest() {
-    assertThrows(
-        NotImplementedException.class, () -> tableStepRepository.headerIsPresent(List.of("blah")));
+    assertThrowsNotImplemented(() -> tableStepRepository.headerIsPresent(NAME_LIST));
   }
 
   @Test
   void getNonNullValueTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableStepRepository.getNonNullValue("blah", new HashMap<>()));
+    assertThrowsNotImplemented(() -> tableStepRepository.getNonNullValue(NAME, new HashMap<>()));
   }
 
   @Test
   void getCellValueAndPutInMapTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> tableStepRepository.getCellValueAndPutInMap("blah", "blah", 0, new HashMap<>()));
+    assertThrowsNotImplemented(
+        () -> tableStepRepository.getCellValueAndPutInMap(NAME, "blah", 0, new HashMap<>()));
   }
 }

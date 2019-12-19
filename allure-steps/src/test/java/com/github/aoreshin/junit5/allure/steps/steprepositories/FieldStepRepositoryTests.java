@@ -1,9 +1,8 @@
 package com.github.aoreshin.junit5.allure.steps.steprepositories;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static com.github.aoreshin.junit5.allure.steps.steprepositories.AssertionUtil.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 
@@ -15,79 +14,65 @@ final class FieldStepRepositoryTests {
 
   @Test
   void checkFieldContainsValueTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> fieldStepRepository.checkFieldContainsValue("blah", "blah"));
+    assertThrowsNotImplemented(() -> fieldStepRepository.checkFieldContainsValue("blah", "blah"));
   }
 
   @Test
   void checkFieldContainsValueMapTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () -> fieldStepRepository.checkFieldContainsValue(Map.of("blah", "blah")));
   }
 
   @Test
   void checkFieldDoesntContainValueTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () -> fieldStepRepository.checkFieldDoesntContainValue("blah", "blah"));
   }
 
   @Test
   void checkFieldDoesntContainValueMapTest() {
-    assertThrows(
-        NotImplementedException.class,
+    assertThrowsNotImplemented(
         () -> fieldStepRepository.checkFieldDoesntContainValue(Map.of("blah", "blah")));
   }
 
   @Test
   void checkFieldIsEmptyTest() {
-    assertThrows(
-        NotImplementedException.class, () -> fieldStepRepository.checkFieldIsEmpty("blah"));
+    assertThrowsNotImplemented(() -> fieldStepRepository.checkFieldIsEmpty(NAME));
   }
 
   @Test
   void checkFieldIsEmptyListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> fieldStepRepository.checkFieldIsEmpty(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> fieldStepRepository.checkFieldIsEmpty(NAME_LIST));
   }
 
   @Test
   void checkFieldIsNotEmptyTest() {
-    assertThrows(
-        NotImplementedException.class, () -> fieldStepRepository.checkFieldIsNotEmpty("blah"));
+    assertThrowsNotImplemented(() -> fieldStepRepository.checkFieldIsNotEmpty(NAME));
   }
 
   @Test
   void checkFieldIsNotEmptyListTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> fieldStepRepository.checkFieldIsNotEmpty(List.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> fieldStepRepository.checkFieldIsNotEmpty(NAME_LIST));
   }
 
   @Test
   void clearFieldTest() {
-    assertThrows(NotImplementedException.class, () -> fieldStepRepository.clearField("blah"));
+    assertThrowsNotImplemented(() -> fieldStepRepository.clearField(NAME));
   }
 
   @Test
   void fillFieldTest() {
-    assertThrows(
-        NotImplementedException.class, () -> fieldStepRepository.fillField("blah", "blah"));
+    assertThrowsNotImplemented(() -> fieldStepRepository.fillField(NAME, VALUE));
   }
 
   @Test
   void fillFieldMapTest() {
-    assertThrows(
-        NotImplementedException.class, () -> fieldStepRepository.fillField(Map.of("blah", "blah")));
+    assertThrowsNotImplemented(() -> fieldStepRepository.fillField(NAMES_AND_VALUES));
   }
 
   @Test
   void putFieldValueInMapTest() {
-    assertThrows(
-        NotImplementedException.class,
-        () -> fieldStepRepository.putFieldValueInMap("blah", "blah", new HashMap<>()));
+    assertThrowsNotImplemented(
+        () -> fieldStepRepository.putFieldValueInMap(NAME, VALUE, new HashMap<>()));
   }
 }

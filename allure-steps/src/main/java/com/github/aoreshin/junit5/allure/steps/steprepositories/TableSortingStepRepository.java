@@ -10,12 +10,12 @@ import java.util.Comparator;
 public interface TableSortingStepRepository<T> {
   @Step("Проверка что колонка {column} отсортирована по {way}")
   default T checkColumnSorted(final String column, final Sorting way, final Comparator comparator) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   @Step("Проверка что колонка с датами {column} отсортирована по {way}")
   default T checkDateColumnSorted(final String column, final Sorting way) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   @Step("Проверка что колонка с датами {column} отсортирована по {way}")
@@ -24,7 +24,7 @@ public interface TableSortingStepRepository<T> {
       final Sorting way,
       final DateTimeFormatter formatter,
       final Comparator<LocalDate> comparator) {
-    throw new NotImplementedException("Реализуйте метод");
+    throw new NotImplementedException();
   }
 
   enum Sorting {

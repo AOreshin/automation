@@ -19,6 +19,7 @@ plugins {
 apply plugin: 'com.pascalwelsch.gitversioner'
 
 allprojects {
+    group = "com.github.aoreshin"
     version = gitVersioner.versionCode
 }
 
@@ -63,7 +64,7 @@ subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                group = "com.github.aoreshin"
+                group = project.group
                 artifactId = project.name
                 version = project.version
 

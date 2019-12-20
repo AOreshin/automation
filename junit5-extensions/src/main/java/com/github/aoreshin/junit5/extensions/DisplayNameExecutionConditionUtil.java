@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 final class DisplayNameExecutionConditionUtil {
+  private DisplayNameExecutionConditionUtil() {}
+
   static List<String> getDisplayNamesForSystemProperty(String property) {
     String displayNames = System.getProperty(property);
 

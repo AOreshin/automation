@@ -45,6 +45,7 @@ public final class GenericParameterResolver<T> implements ParameterResolver {
     return value;
   }
 
+  @Generated
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -55,6 +56,7 @@ public final class GenericParameterResolver<T> implements ParameterResolver {
         && Objects.equals(name, that.name);
   }
 
+  @Generated
   @Override
   public int hashCode() {
     return Objects.hash(value, parameterType, name);

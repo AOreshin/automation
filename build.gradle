@@ -13,11 +13,6 @@ plugins {
     id "com.diffplug.gradle.spotless" version "3.26.1"
 }
 
-allprojects {
-    group = "com.github.aoreshin"
-    version = versioning.info.display
-}
-
 nexusStaging {
     numberOfRetries = 500
 }
@@ -25,10 +20,13 @@ nexusStaging {
 subprojects {
     apply plugin: 'de.marcphilipp.nexus-publish'
     apply plugin: 'com.diffplug.gradle.spotless'
+    apply plugin: 'net.nemerosa.versioning'
     apply plugin: 'signing'
     apply plugin: 'java'
     apply plugin: 'idea'
     apply plugin: 'jacoco'
+
+    jacoco.toolVersion = '0.8.5'
 
     spotless {
         java {
@@ -57,9 +55,9 @@ subprojects {
     publishing {
         publications {
             mavenJava(MavenPublication) {
-                groupId = project.group
+                group = "com.github.aoreshin"
                 artifactId = project.name
-                version = project.version
+                version = versioning.info.base
 
                 from components.java
 
@@ -127,16 +125,11 @@ subprojects {
     jacocoTestCoverageVerification {
         violationRules {
             rule {
-                element = 'CLASS'
                 limit {
                     counter = 'LINE'
                     value = 'COVEREDRATIO'
                     minimum = 1.0
                 }
-                excludes = [
-                    'com.github.aoreshin.junit5.allure.steps.StepRepositoryAspect',
-                    'com.github.aoreshin.junit5.extensions.DisplayNameExecutionConditionUtil'
-                ]
             }
         }
     }

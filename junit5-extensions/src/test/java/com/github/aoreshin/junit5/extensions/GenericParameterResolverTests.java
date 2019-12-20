@@ -62,27 +62,4 @@ final class GenericParameterResolverTests {
     assertTrue(resolver.supportsParameter(context, null));
     assertEquals(value, resolver.resolveParameter(context, null));
   }
-
-  @Test
-  void hashCodeTest() {
-    Class<String> aClass = String.class;
-    String value = "someNonsense";
-    String name = "message";
-
-    assertEquals(
-        new GenericParameterResolver<>(aClass, value, name).hashCode(),
-        new GenericParameterResolver<>(aClass, value, name).hashCode());
-  }
-
-  @Test
-  void equalsTest() {
-    Class<String> aClass = String.class;
-    String value = "someNonsense";
-    String name = "message";
-
-    GenericParameterResolver<String> first = new GenericParameterResolver<>(aClass, value, name);
-    GenericParameterResolver<String> second = new GenericParameterResolver<>(aClass, value, name);
-
-    assertEquals(first, second);
-  }
 }

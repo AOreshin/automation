@@ -34,16 +34,16 @@ final class StepRepositoryAspectTests {
       ProceedingJoinPoint proceedingJoinPoint,
       Method method)
       throws Throwable {
-    //Fixture setup
+    // Fixture setup
     Object[] args = new Object[] {1, 2, 3};
 
     when(proceedingJoinPoint.getArgs()).thenReturn(args);
     doReturn(NoImplementedInterfaces.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    //Verification
+    // Verification
     verifyStepsAreNotCreated(lifecycle);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -56,7 +56,7 @@ final class StepRepositoryAspectTests {
       ProceedingJoinPoint proceedingJoinPoint,
       Method method)
       throws Throwable {
-    //Fixture setup
+    // Fixture setup
     String methodName = "blah";
     Object[] args = new Object[] {1, 2, 3};
     Class<?>[] parameterTypes = new Class<?>[] {Integer.class, Integer.class, Integer.class};
@@ -66,10 +66,10 @@ final class StepRepositoryAspectTests {
     when(method.getParameterTypes()).thenReturn(parameterTypes);
     doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    //Verification
+    // Verification
     verifyStepsAreNotCreated(lifecycle);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -82,7 +82,7 @@ final class StepRepositoryAspectTests {
       ProceedingJoinPoint proceedingJoinPoint,
       Method method)
       throws Throwable {
-    //Fixture setup
+    // Fixture setup
     String methodName = "clickButton";
     Object[] args = new Object[] {1, 2, 3};
     Class<?>[] parameterTypes = new Class<?>[] {Integer.class, Integer.class, Integer.class};
@@ -92,10 +92,10 @@ final class StepRepositoryAspectTests {
     when(method.getParameterTypes()).thenReturn(parameterTypes);
     doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    //Verification
+    // Verification
     verifyStepsAreNotCreated(lifecycle);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -109,7 +109,7 @@ final class StepRepositoryAspectTests {
       Method method,
       MethodSignature methodSignature)
       throws Throwable {
-    //Fixture setup
+    // Fixture setup
     String methodName = "clickButton";
     String[] parameterNames = new String[] {"name"};
     Class<?>[] parameterTypes = new Class<?>[] {String.class};
@@ -121,10 +121,10 @@ final class StepRepositoryAspectTests {
     when(method.getParameterTypes()).thenReturn(parameterTypes);
     doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint);
 
-    //Verification
+    // Verification
     verifyStepsAreCreated(lifecycle, Status.PASSED);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -140,7 +140,7 @@ final class StepRepositoryAspectTests {
       throws Throwable {
     class VeryScaryException extends RuntimeException {}
 
-    //Fixture setup
+    // Fixture setup
     String methodName = "clickButton";
     String[] parameterNames = new String[] {"name"};
     Class<?>[] parameterTypes = new Class<?>[] {String.class};
@@ -153,12 +153,12 @@ final class StepRepositoryAspectTests {
     when(method.getParameterTypes()).thenReturn(parameterTypes);
     doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     assertThrows(
         VeryScaryException.class,
         () -> stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint));
 
-    //Verification
+    // Verification
     verifyStepsAreCreated(lifecycle, Status.BROKEN);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -172,7 +172,7 @@ final class StepRepositoryAspectTests {
       Method method,
       MethodSignature methodSignature)
       throws Throwable {
-    //Fixture setup
+    // Fixture setup
     String methodName = "clickButton";
     String[] parameterNames = new String[] {"name"};
     Class<?>[] parameterTypes = new Class<?>[] {String.class};
@@ -185,12 +185,12 @@ final class StepRepositoryAspectTests {
     when(method.getParameterTypes()).thenReturn(parameterTypes);
     doReturn(SweetPageObject.class).when(method).getDeclaringClass();
 
-    //Executing SUT
+    // Executing SUT
     assertThrows(
         AssertionError.class,
         () -> stepRepositoryAspect.processPageObjectMethod(proceedingJoinPoint));
 
-    //Verification
+    // Verification
     verifyStepsAreCreated(lifecycle, Status.FAILED);
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
@@ -217,7 +217,7 @@ final class StepRepositoryAspectTests {
     verify(lifecycle, never()).updateStep(any(), any());
     verify(lifecycle, never()).stopStep(anyString());
 
-    //Verification of lambda logic
+    // Verification of lambda logic
     StepResult stepResult = new StepResult();
     captor.getValue().accept(stepResult);
     assertEquals(status, stepResult.getStatus());

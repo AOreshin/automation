@@ -10,6 +10,19 @@ import java.util.List;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Extension that is used to erase all sensitive parameters (passwords, tokens, etc) from Allure's
+ * test step parameters
+ *
+ * <p>Can be used in two flavours:
+ *
+ * <ul>
+ *   <li>@ExtendWith(AllureEncodeStepParametersExtension.class) then you must specify
+ *       allureEncodeStepParameters property in order to make it work properly
+ *   <li>Use com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder addExtension
+ *       method and pass parameter names through constructor.
+ * </ul>
+ */
 public final class AllureEncodeStepParametersExtension implements AfterEachCallback {
   private final List<String> parameterNames;
 

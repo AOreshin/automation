@@ -61,6 +61,7 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
   }
 
   private String getMessagesWithId(String uuid) throws IOException {
+
     return Stream.of(new String(inputStream.readAllBytes()).split("\n"))
         .filter(logMessage -> logMessage.contains(uuid))
         .map(logMessage -> logMessage.replaceAll(removeFishTagRegex, ""))

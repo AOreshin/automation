@@ -2,6 +2,7 @@ package com.github.aoreshin.junit5.allure.steps;
 
 import io.qameta.allure.model.Status;
 
+/** Steps to create nested Allure steps directly in test code */
 @SuppressWarnings("unchecked")
 public abstract class StepWrapperSteps<T extends StepWrapperSteps<T>> {
   private static final ThreadLocal<StepWrapper> stepWrapperThreadLocal =

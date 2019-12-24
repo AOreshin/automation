@@ -26,6 +26,20 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.data.util.AnnotatedTypeScanner;
 
+/**
+ * Class that helps to prevent proliferation of @Step annotations
+ *
+ * <ul>
+ *   <li>Intercepts public method on a class annotated with @PageObject
+ *   <li>Searches for interfaces annotated with @StepRepository in a declaring class
+ *   <li>If declaring class implements interface annotated with @StepRepository then it searches for
+ *       intercepted method in default methods of interfaces
+ *   <li>If intercepted method matched with interface method then it takes @Step value from
+ *       interface method and starts Allure step
+ *   <li>If execution of method throws runtime exception step is marked as broken
+ *   <li>If execution of method throws AssertionError step is marked as failed
+ * </ul>
+ */
 @Aspect
 public final class StepRepositoryAspect {
   private final Set<Class<?>> STEP_REPOSITORY_INTERFACES =

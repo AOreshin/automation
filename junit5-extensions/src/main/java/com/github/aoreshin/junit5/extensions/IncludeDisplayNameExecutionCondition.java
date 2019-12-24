@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/** Includes test when it's display name contains value specified in includeDisplayNames property */
 public final class IncludeDisplayNameExecutionCondition implements ExecutionCondition {
   private static final String PROPERTY_NAME = "includeDisplayNames";
   private final List<String> DISPLAY_NAMES_LIST = getDisplayNamesForSystemProperty(PROPERTY_NAME);

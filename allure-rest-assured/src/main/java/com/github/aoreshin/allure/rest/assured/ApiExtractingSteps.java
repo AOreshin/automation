@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import io.restassured.response.Response;
 import java.util.Map;
 
+/** Steps for extracting data from Rest Assured's Response */
 public final class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
   private final Response response;
 

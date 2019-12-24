@@ -6,6 +6,11 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+/**
+ * Generic parameter resolver implementation
+ *
+ * @param <T> - type of parameter to be resolved
+ */
 public final class GenericParameterResolver<T> implements ParameterResolver {
   private final T value;
   private final Class<T> parameterType;

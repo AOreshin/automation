@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
@@ -49,7 +50,7 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
   @Override
   public void afterEach(ExtensionContext context) throws IOException {
     // Grouping logs by id
-    String groupedLogMessages = getMessagesWithId(lifecycle().getCurrentTestCase().orElseThrow());
+    String groupedLogMessages = getMessagesWithId(ThreadContext.get("id"));
 
     groupedLogMessages = groupedLogMessages.replaceAll(regex, "*****");
 

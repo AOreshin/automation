@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -62,12 +61,10 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
         spy(new AllureConcurrentLoggerAttachmentsExtension(logPath, regex));
     AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
-    when(lifecycle.getCurrentTestCase()).thenReturn(Optional.of(uuid));
     when(extension.lifecycle()).thenReturn(lifecycle);
 
     extension.afterEach(null);
 
-    verify(lifecycle, times(1)).getCurrentTestCase();
     verify(lifecycle, times(1))
         .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), any(byte[].class));
   }

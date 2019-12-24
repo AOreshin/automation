@@ -1,75 +1,146 @@
 package com.github.aoreshin.junit5.extensions.allure;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
-
+import com.github.aoreshin.junit5.extensions.FishTaggingExtension;
 import io.qameta.allure.AllureLifecycle;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.List;
-import java.util.UUID;
+import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 final class AllureConcurrentLoggerAttachmentsExtensionTests {
   @Test
-  void defaultConstructorTest() {
-    String logPath = "blah-blah";
-    String regex = "bite my shiny metal ass";
+  void twoArgsConstructorTest() {
+    InputStream inputStream =
+        new InputStream() {
+          @Override
+          public int read() throws IOException {
+            return 0;
+          }
+        };
 
-    System.setProperty("concurrentLoggerLogPath", logPath);
-    System.setProperty("concurrentLoggerRegex", regex);
+    String removeFishTagRegex = "regex";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        new AllureConcurrentLoggerAttachmentsExtension();
+        new AllureConcurrentLoggerAttachmentsExtension(inputStream, removeFishTagRegex);
 
-    assertEquals(logPath, extension.getLogPath());
-    assertEquals(regex, extension.getRegex());
+    assertNull(extension.getRemoveSensitiveDataRegex());
   }
 
   @Test
-  void nonDefaultConstructorTest() {
-    String logPath = "blah-blah-blah";
-    String regex = "developersdevelopersdevelopersdevelopers";
+  void threeArgsConstructorTest() {
+    InputStream inputStream =
+        new InputStream() {
+          @Override
+          public int read() throws IOException {
+            return 0;
+          }
+        };
+
+    String removeFishTagRegex = "regex";
+    String removeSensitiveDataRegex = "anotherRegex";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        new AllureConcurrentLoggerAttachmentsExtension(logPath, regex);
+        new AllureConcurrentLoggerAttachmentsExtension(
+            inputStream, removeFishTagRegex, removeSensitiveDataRegex);
 
-    assertEquals(logPath, extension.getLogPath());
-    assertEquals(regex, extension.getRegex());
+    assertEquals(removeSensitiveDataRegex, extension.getRemoveSensitiveDataRegex());
   }
 
   @Test
-  void afterEachTest() throws IOException {
-    String uuid = UUID.randomUUID().toString();
-    String regex = "blah-blah-blah";
-    String logPath = "/build/log.txt";
-    List<String> lines =
-        List.of(
-            getString(uuid, "Some clever message"),
-            getString(uuid, "Another clever message"),
-            getString(uuid, "I'm out of clever messages"));
+  void afterEachTestWithoutRemovingSensitiveData() throws IOException {
+    // Fixture setup
+    String regex = "^\\[\\S*\\] ";
 
-    Path path = Path.of(System.getProperty("user.dir") + logPath);
-    FileWriter fileWriter = new FileWriter(path.toString());
+    String messageOne = "Some clever message";
+    String messageTwo = "Another clever message";
+    String messageThree = "I'm out of clever messages";
+    String messageFour = "Blah-blah-blah";
 
-    for (String line : lines) {
-      fileWriter.write(line + System.lineSeparator());
-    }
+    FishTaggingExtension fishTaggingExtension = new FishTaggingExtension();
+    fishTaggingExtension.beforeEach(null);
+
+    String uuid = ThreadContext.get("id");
+
+    String messages =
+        getString(uuid, messageOne)
+            + getString(uuid, messageTwo)
+            + getString("notPresentUuid", messageThree)
+            + getString(uuid, messageFour);
+
+    String expected = messageOne + "\n" + messageTwo + "\n" + messageFour;
+
+    InputStream inputStream = new ByteArrayInputStream(messages.getBytes());
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(new AllureConcurrentLoggerAttachmentsExtension(logPath, regex));
+        spy(new AllureConcurrentLoggerAttachmentsExtension(inputStream, regex));
     AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
     when(extension.lifecycle()).thenReturn(lifecycle);
+    ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
 
+    // Executing SUT
     extension.afterEach(null);
 
+    // Verification
     verify(lifecycle, times(1))
-        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), any(byte[].class));
+        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), captor.capture());
+
+    String actual = new String(captor.getValue());
+
+    assertEquals(expected, actual);
+  }
+
+  @Test
+  void afterEachTestWithRemovingSensitiveData() throws IOException {
+    // Fixture setup
+    String regex = "^\\[\\S*\\] ";
+    String sensitiveData = "clever";
+
+    String messageOne = "Some clever message";
+    String messageTwo = "Another clever message";
+    String messageThree = "I'm out of clever messages";
+    String messageFour = "Blah-blah-blah";
+
+    FishTaggingExtension fishTaggingExtension = new FishTaggingExtension();
+    fishTaggingExtension.beforeEach(null);
+
+    String uuid = ThreadContext.get("id");
+
+    String messages =
+        getString(uuid, messageOne)
+            + getString(uuid, messageTwo)
+            + getString("notPresentUuid", messageThree)
+            + getString(uuid, messageFour);
+
+    InputStream inputStream = new ByteArrayInputStream(messages.getBytes());
+
+    AllureConcurrentLoggerAttachmentsExtension extension =
+        spy(new AllureConcurrentLoggerAttachmentsExtension(inputStream, regex, sensitiveData));
+    AllureLifecycle lifecycle = mock(AllureLifecycle.class);
+
+    when(extension.lifecycle()).thenReturn(lifecycle);
+    ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
+
+    // Executing SUT
+    extension.afterEach(null);
+
+    // Verification
+    verify(lifecycle, times(1))
+        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), captor.capture());
+
+    String actual = new String(captor.getValue());
+
+    assertFalse(actual.contains("clever"));
   }
 
   private String getString(String uuid, String message) {
-    return "[" + uuid + "] " + message;
+    String format = "[%s] %s\n";
+    return String.format(format, uuid, message);
   }
 }

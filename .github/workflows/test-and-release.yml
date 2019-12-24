@@ -25,6 +25,7 @@ jobs:
           signMavenJavaPublication
           publishAllPublicationsToSonatypeRepository
           closeAndReleaseRepository
+          gitVersion
           -PnexusUsername=${{ secrets.nexusUsername }}
           -PnexusPassword=${{ secrets.nexusPassword }}
           -Psigning.keyId=${{ secrets.signingKeyId }}

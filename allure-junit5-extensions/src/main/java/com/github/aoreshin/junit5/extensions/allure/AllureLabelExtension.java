@@ -6,6 +6,10 @@ import java.util.List;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Extension that is used to programmatically add Labels to Allure report. To be used with
+ * com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder
+ */
 public final class AllureLabelExtension implements BeforeEachCallback {
   private final List<Label> labelList;
 

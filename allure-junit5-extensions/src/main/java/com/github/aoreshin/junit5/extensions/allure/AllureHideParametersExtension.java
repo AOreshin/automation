@@ -8,6 +8,9 @@ import java.util.List;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Extension that is used to delete Allure's test step parameters to enhance readability of tests
+ */
 public final class AllureHideParametersExtension implements AfterEachCallback {
   @Override
   public void afterEach(ExtensionContext context) {

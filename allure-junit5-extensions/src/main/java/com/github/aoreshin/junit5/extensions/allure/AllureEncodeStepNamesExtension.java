@@ -9,6 +9,19 @@ import java.util.List;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Extension that is used to erase all sensitive information (passwords, tokens, etc) from Allure's
+ * test step names
+ *
+ * <p>Can be used in two flavours:
+ *
+ * <ul>
+ *   <li>@ExtendWith(AllureEncodeStepNamesExtension.class) then you must specify
+ *       allureEncodeStepNamesRegex property in order to make it work properly
+ *   <li>Use com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder addExtension
+ *       method and pass regex through constructor.
+ * </ul>
+ */
 public final class AllureEncodeStepNamesExtension implements AfterEachCallback {
   private final String regex;
 

@@ -22,6 +22,7 @@ jobs:
           test
           spotlessJavaCheck
           jacocoTestCoverageVerification
+          gitVersion
           -PnexusUsername=${{ secrets.nexusUsername }}
           -PnexusPassword=${{ secrets.nexusPassword }}
           -Psigning.keyId=${{ secrets.signingKeyId }}

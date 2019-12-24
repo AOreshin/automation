@@ -11,6 +11,27 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Extension that processes logs from concurrent test execution
+ *
+ * <ul>
+ *   <li>Reads logs from specified file
+ *   <li>Filters lines that contain id, specified in Log4J ThreadContext
+ *   <li>Applies regex to filtered lines to remove all sensitive data (passwords, tokens, accounts
+ *       etc)
+ *   <li>Adds the result to Allure as text file attachment
+ * </ul>
+ *
+ * <p>Can be used in two flavours:
+ *
+ * <ul>
+ *   <li>@ExtendWith(AllureConcurrentLoggerAttachmentsExtension.class) then you must specify
+ *       concurrentLoggerLogPath and concurrentLoggerRegex properties in order to make it work
+ *       properly
+ *   <li>Use com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder addExtension
+ *       method and pass logPath and regex through constructor.
+ * </ul>
+ */
 public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
   private final String logPath;
   private final String regex;
@@ -27,7 +48,7 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
 
   @Override
   public void afterEach(ExtensionContext context) throws IOException {
-    // Группировка логов по айдишнику
+    // Grouping logs by id
     String groupedLogMessages = getMessagesWithId(lifecycle().getCurrentTestCase().orElseThrow());
 
     groupedLogMessages = groupedLogMessages.replaceAll(regex, "*****");

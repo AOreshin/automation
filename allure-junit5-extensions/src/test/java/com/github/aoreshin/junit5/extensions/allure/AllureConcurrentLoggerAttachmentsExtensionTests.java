@@ -1,17 +1,16 @@
 package com.github.aoreshin.junit5.extensions.allure;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.github.aoreshin.junit5.extensions.FishTaggingExtension;
 import io.qameta.allure.AllureLifecycle;
-import org.apache.logging.log4j.ThreadContext;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import org.apache.logging.log4j.ThreadContext;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 final class AllureConcurrentLoggerAttachmentsExtensionTests {
   @Test

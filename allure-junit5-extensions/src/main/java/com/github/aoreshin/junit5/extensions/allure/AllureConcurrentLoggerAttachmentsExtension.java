@@ -1,17 +1,16 @@
 package com.github.aoreshin.junit5.extensions.allure;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
-import org.apache.logging.log4j.ThreadContext;
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.apache.logging.log4j.ThreadContext;
+import org.junit.jupiter.api.extension.AfterEachCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * Extension that processes logs from concurrent test execution
@@ -61,7 +60,6 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
   }
 
   private String getMessagesWithId(String uuid) throws IOException {
-
     return Stream.of(new String(inputStream.readAllBytes()).split("\n"))
         .filter(logMessage -> logMessage.contains(uuid))
         .map(logMessage -> logMessage.replaceAll(removeFishTagRegex, ""))

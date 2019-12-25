@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
+/** Helps to configure invocation context of the test template */
 public final class TestTemplateInvocationContextBuilder {
   private final List<Extension> extensions = new ArrayList<>();
   private String displayName;
@@ -47,6 +48,10 @@ public final class TestTemplateInvocationContextBuilder {
     return this;
   }
 
+  /**
+   * Adds extension to specified index to force order of execution
+   * https://junit.org/junit5/docs/current/user-guide/#extensions-execution-order-wrapping-behavior
+   */
   public TestTemplateInvocationContextBuilder addExtension(int index, Extension extension) {
     extensions.add(index, extension);
     return this;

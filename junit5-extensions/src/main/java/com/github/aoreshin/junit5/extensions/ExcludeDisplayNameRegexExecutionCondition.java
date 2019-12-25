@@ -8,6 +8,9 @@ import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * Excludes test when it's display name matches regex specified in excludeDisplayNamesRegex property
+ */
 public final class ExcludeDisplayNameRegexExecutionCondition implements ExecutionCondition {
   private static final String PROPERTY_NAME = "excludeDisplayNamesRegex";
   private final String PATTERN = System.getProperty(PROPERTY_NAME);

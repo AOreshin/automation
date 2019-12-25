@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.function.Executable;
 
+/** Step for validating Rest Assured's Response */
 public final class ApiValidationSteps extends StepWrapperSteps<ApiValidationSteps> {
   private final Response response;
 

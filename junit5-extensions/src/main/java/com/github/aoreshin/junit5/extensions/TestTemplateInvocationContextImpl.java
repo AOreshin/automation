@@ -4,6 +4,7 @@ import java.util.List;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
+/** Simple implementation of TestTemplateInvocationContext interface */
 public final class TestTemplateInvocationContextImpl implements TestTemplateInvocationContext {
   private final List<Extension> extensions;
   private String displayName;

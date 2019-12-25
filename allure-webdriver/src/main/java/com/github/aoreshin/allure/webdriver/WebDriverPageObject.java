@@ -10,6 +10,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * Parent class for all WebDriver page objects
+ *
+ * @param <T> - recursive generic type parameter
+ */
 public abstract class WebDriverPageObject<T extends WebDriverPageObject<T>>
     extends StepWrapperSteps<T> {
   @SuppressWarnings("unused")

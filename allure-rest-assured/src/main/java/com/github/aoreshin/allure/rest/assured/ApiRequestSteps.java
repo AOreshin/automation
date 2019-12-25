@@ -8,6 +8,7 @@ import io.restassured.builder.RequestSpecBuilder;
 import java.util.List;
 import java.util.Map;
 
+/** Steps for building request and sending it */
 public final class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
   private RequestSpecBuilder requestSpecBuilder = new RequestSpecBuilder();
 

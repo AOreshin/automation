@@ -3,7 +3,7 @@ name: Test, check style, coverage and release
 on:
   push:
     branches:
-      - master
+      - 'releases/*'
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
           signMavenJavaPublication
           publishAllPublicationsToSonatypeRepository
           closeAndReleaseRepository
-          gitVersion
+          versionDisplay
           -PnexusUsername=${{ secrets.nexusUsername }}
           -PnexusPassword=${{ secrets.nexusPassword }}
           -Psigning.keyId=${{ secrets.signingKeyId }}

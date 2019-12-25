@@ -5,9 +5,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * Extension that processes logs from concurrent test execution
  *
  * <ul>
- *   <li>Reads logs from provided input stream
+ *   <li>Reads logs from provided file
  *   <li>Filters lines that contain id, specified in Log4J ThreadContext
  *   <li>Applies regex to filtered lines to remove fish tag
  *   <li>Applies regex to filtered lines to remove all sensitive data (passwords, tokens, accounts
@@ -28,20 +28,19 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * method and pass constructor parameters.
  */
 public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
-  private final InputStream inputStream;
+  private final String logPath;
   private final String removeFishTagRegex;
   private final String removeSensitiveDataRegex;
 
-  public AllureConcurrentLoggerAttachmentsExtension(
-      InputStream inputStream, String removeFishTagRegex) {
-    this.inputStream = inputStream;
+  public AllureConcurrentLoggerAttachmentsExtension(String logPath, String removeFishTagRegex) {
+    this.logPath = logPath;
     this.removeFishTagRegex = removeFishTagRegex;
     this.removeSensitiveDataRegex = null;
   }
 
   public AllureConcurrentLoggerAttachmentsExtension(
-      InputStream inputStream, String removeFishTagRegex, String removeSensitiveDataRegex) {
-    this.inputStream = inputStream;
+      String logPath, String removeFishTagRegex, String removeSensitiveDataRegex) {
+    this.logPath = logPath;
     this.removeFishTagRegex = removeFishTagRegex;
     this.removeSensitiveDataRegex = removeSensitiveDataRegex;
   }
@@ -60,7 +59,7 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
   }
 
   private String getMessagesWithId(String uuid) throws IOException {
-    return Stream.of(new String(inputStream.readAllBytes()).split("\n"))
+    return Files.readAllLines(Path.of(logPath), UTF_8).stream()
         .filter(logMessage -> logMessage.contains(uuid))
         .map(logMessage -> logMessage.replaceAll(removeFishTagRegex, ""))
         .collect(Collectors.joining("\n"));

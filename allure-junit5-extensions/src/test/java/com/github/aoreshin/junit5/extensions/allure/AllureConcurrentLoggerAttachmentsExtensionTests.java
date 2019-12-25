@@ -3,143 +3,142 @@ package com.github.aoreshin.junit5.extensions.allure;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.github.aoreshin.junit5.extensions.FishTaggingExtension;
 import io.qameta.allure.AllureLifecycle;
-import java.io.ByteArrayInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import org.apache.logging.log4j.ThreadContext;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
 
+@Execution(ExecutionMode.SAME_THREAD)
 final class AllureConcurrentLoggerAttachmentsExtensionTests {
-  @Test
-  void twoArgsConstructorTest() {
-    InputStream inputStream =
-        new InputStream() {
-          @Override
-          public int read() throws IOException {
-            return 0;
-          }
-        };
-
-    String removeFishTagRegex = "regex";
-
+  @ParameterizedTest
+  @MethodSource("provider")
+  void twoArgsConstructorTest(String logPath, String removeFishTagRegex) {
     AllureConcurrentLoggerAttachmentsExtension extension =
-        new AllureConcurrentLoggerAttachmentsExtension(inputStream, removeFishTagRegex);
+        new AllureConcurrentLoggerAttachmentsExtension(logPath, removeFishTagRegex);
 
     assertNull(extension.getRemoveSensitiveDataRegex());
   }
 
-  @Test
-  void threeArgsConstructorTest() {
-    InputStream inputStream =
-        new InputStream() {
-          @Override
-          public int read() throws IOException {
-            return 0;
-          }
-        };
-
-    String removeFishTagRegex = "regex";
+  @ParameterizedTest
+  @MethodSource("provider")
+  void threeArgsConstructorTest(String logPath, String removeFishTagRegex) {
     String removeSensitiveDataRegex = "anotherRegex";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
         new AllureConcurrentLoggerAttachmentsExtension(
-            inputStream, removeFishTagRegex, removeSensitiveDataRegex);
+            logPath, removeFishTagRegex, removeSensitiveDataRegex);
 
     assertEquals(removeSensitiveDataRegex, extension.getRemoveSensitiveDataRegex());
   }
 
-  @Test
-  void afterEachTestWithoutRemovingSensitiveData() throws IOException {
+  @ParameterizedTest
+  @MethodSource("provider")
+  void afterEachTestWithoutRemovingSensitiveData(
+      String logPath, String removeFishTagRegex, ArgumentCaptor<byte[]> captor) throws IOException {
     // Fixture setup
-    String regex = "^\\[\\S*\\] ";
-
-    String messageOne = "Some clever message";
-    String messageTwo = "Another clever message";
-    String messageThree = "I'm out of clever messages";
-    String messageFour = "Blah-blah-blah";
-
-    FishTaggingExtension fishTaggingExtension = new FishTaggingExtension();
-    fishTaggingExtension.beforeEach(null);
-
-    String uuid = ThreadContext.get("id");
-
-    String messages =
-        getString(uuid, messageOne)
-            + getString(uuid, messageTwo)
-            + getString("notPresentUuid", messageThree)
-            + getString(uuid, messageFour);
-
-    String expected = messageOne + "\n" + messageTwo + "\n" + messageFour;
-
-    InputStream inputStream = new ByteArrayInputStream(messages.getBytes());
+    String expected =
+        "Some clever message" + "\n" + "Another clever message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(new AllureConcurrentLoggerAttachmentsExtension(inputStream, regex));
-    AllureLifecycle lifecycle = mock(AllureLifecycle.class);
-
-    when(extension.lifecycle()).thenReturn(lifecycle);
-    ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
+        spy(new AllureConcurrentLoggerAttachmentsExtension(logPath, removeFishTagRegex));
+    AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 
     // Executing SUT
     extension.afterEach(null);
 
     // Verification
-    verify(lifecycle, times(1))
-        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), captor.capture());
-
-    String actual = new String(captor.getValue());
-
-    assertEquals(expected, actual);
+    verifyResult(captor, expected, lifecycle);
   }
 
-  @Test
-  void afterEachTestWithRemovingSensitiveData() throws IOException {
+  @ParameterizedTest
+  @MethodSource("provider")
+  void afterEachTestWithRemovingSensitiveData(
+      String logPath, String removeFishTagRegex, ArgumentCaptor<byte[]> captor) throws IOException {
     // Fixture setup
-    String regex = "^\\[\\S*\\] ";
-    String sensitiveData = "clever";
+    String sensitiveDataRegex = "clever";
 
-    String messageOne = "Some clever message";
-    String messageTwo = "Another clever message";
-    String messageThree = "I'm out of clever messages";
-    String messageFour = "Blah-blah-blah";
-
-    FishTaggingExtension fishTaggingExtension = new FishTaggingExtension();
-    fishTaggingExtension.beforeEach(null);
-
-    String uuid = ThreadContext.get("id");
-
-    String messages =
-        getString(uuid, messageOne)
-            + getString(uuid, messageTwo)
-            + getString("notPresentUuid", messageThree)
-            + getString(uuid, messageFour);
-
-    InputStream inputStream = new ByteArrayInputStream(messages.getBytes());
+    String expected =
+        "Some ***** message" + "\n" + "Another ***** message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(new AllureConcurrentLoggerAttachmentsExtension(inputStream, regex, sensitiveData));
-    AllureLifecycle lifecycle = mock(AllureLifecycle.class);
+        spy(
+            new AllureConcurrentLoggerAttachmentsExtension(
+                logPath, removeFishTagRegex, sensitiveDataRegex));
 
-    when(extension.lifecycle()).thenReturn(lifecycle);
-    ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
+    AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 
     // Executing SUT
     extension.afterEach(null);
 
     // Verification
-    verify(lifecycle, times(1))
-        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), captor.capture());
-
-    String actual = new String(captor.getValue());
-
-    assertFalse(actual.contains("clever"));
+    verifyResult(captor, expected, lifecycle);
   }
 
-  private String getString(String uuid, String message) {
-    String format = "[%s] %s\n";
+  private void verifyResult(
+      ArgumentCaptor<byte[]> captor, String expected, AllureLifecycle lifecycle) {
+    verify(lifecycle, only())
+        .addAttachment(eq("Полный лог"), eq("text/plain"), eq(".txt"), captor.capture());
+    assertEquals(expected, new String(captor.getValue()));
+  }
+
+  private static List<String> getLines(String uuid) {
+    String messageOne = "Some clever message";
+    String messageTwo = "Another clever message";
+    String messageThree = "I'm out of clever messages";
+    String messageFour = "Blah-blah-blah";
+
+    return List.of(
+        getString(uuid, messageOne),
+        getString(uuid, messageTwo),
+        getString("blah", messageThree),
+        getString(uuid, messageFour));
+  }
+
+  private static Stream<Arguments> provider() throws IOException {
+    String logPath = System.getProperty("user.dir") + "/build/log.txt";
+    String removeFishTagRegex = "^\\[\\S*\\] ";
+
+    String uuid = UUID.randomUUID().toString();
+    ThreadContext.put("id", uuid);
+
+    List<String> lines = getLines(uuid);
+
+    writeToFile(logPath, lines);
+
+    ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
+
+    return Stream.of(Arguments.of(logPath, removeFishTagRegex, captor));
+  }
+
+  private static String getString(String uuid, String message) {
+    String format = "[%s] %s";
     return String.format(format, uuid, message);
+  }
+
+  private AllureLifecycle setUpLifecycleMock(AllureConcurrentLoggerAttachmentsExtension extension) {
+    AllureLifecycle lifecycle = mock(AllureLifecycle.class);
+
+    when(extension.lifecycle()).thenReturn(lifecycle);
+    return lifecycle;
+  }
+
+  private static void writeToFile(String logPath, List<String> lines) throws IOException {
+    FileWriter fileWriter = new FileWriter(Path.of(logPath).toString());
+
+    for (String line : lines) {
+      fileWriter.write(line + System.lineSeparator());
+    }
+
+    fileWriter.close();
   }
 }

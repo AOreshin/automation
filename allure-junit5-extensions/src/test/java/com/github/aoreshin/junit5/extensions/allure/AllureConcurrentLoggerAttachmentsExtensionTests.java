@@ -50,7 +50,7 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
         "Some clever message" + "\n" + "Another clever message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(new AllureConcurrentLoggerAttachmentsExtension(logPath, removeFishTagRegex));
+        new AllureConcurrentLoggerAttachmentsExtension(logPath, removeFishTagRegex);
     AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 
     // Executing SUT
@@ -71,9 +71,8 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
         "Some ***** message" + "\n" + "Another ***** message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(
-            new AllureConcurrentLoggerAttachmentsExtension(
-                logPath, removeFishTagRegex, sensitiveDataRegex));
+        new AllureConcurrentLoggerAttachmentsExtension(
+            logPath, removeFishTagRegex, sensitiveDataRegex);
 
     AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 
@@ -128,7 +127,7 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
   private AllureLifecycle setUpLifecycleMock(AllureConcurrentLoggerAttachmentsExtension extension) {
     AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
-    when(extension.lifecycle()).thenReturn(lifecycle);
+    extension.setLifecycle(lifecycle);
     return lifecycle;
   }
 

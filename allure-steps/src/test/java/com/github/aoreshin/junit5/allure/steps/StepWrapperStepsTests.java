@@ -14,16 +14,15 @@ final class StepWrapperStepsTests {
   @Test
   void startStepEmptyStepNameThrowsNullPointerExceptionTest() {
     StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
+    StepWrapperSteps.setStepWrapper(new StepWrapper());
     assertThrows(NullPointerException.class, () -> stepWrapperSteps.startStep(null));
   }
 
   @Test
   void startStepTest() {
-    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps =
-        spy(StepWrapperStepsConcrete.class);
+    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
     StepWrapper stepWrapper = mock(StepWrapper.class);
-
-    when(stepWrapperSteps.stepWrapper()).thenReturn(stepWrapper);
+    StepWrapperSteps.setStepWrapper(stepWrapper);
 
     String stepName = getStepName();
 
@@ -34,11 +33,9 @@ final class StepWrapperStepsTests {
 
   @Test
   void stepTest() {
-    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps =
-        spy(StepWrapperStepsConcrete.class);
+    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
     StepWrapper stepWrapper = mock(StepWrapper.class);
-
-    when(stepWrapperSteps.stepWrapper()).thenReturn(stepWrapper);
+    StepWrapperSteps.setStepWrapper(stepWrapper);
 
     String stepName = getStepName();
 
@@ -52,11 +49,9 @@ final class StepWrapperStepsTests {
   void stepWithExceptionTest() {
     class VeryScaryException extends RuntimeException {}
 
-    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps =
-        spy(StepWrapperStepsConcrete.class);
+    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
     StepWrapper stepWrapper = mock(StepWrapper.class);
-
-    when(stepWrapperSteps.stepWrapper()).thenReturn(stepWrapper);
+    StepWrapperSteps.setStepWrapper(stepWrapper);
 
     String stepName = getStepName();
 
@@ -72,11 +67,9 @@ final class StepWrapperStepsTests {
 
   @Test
   void stopStepTest() {
-    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps =
-        spy(StepWrapperStepsConcrete.class);
+    StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
     StepWrapper stepWrapper = mock(StepWrapper.class);
-
-    when(stepWrapperSteps.stepWrapper()).thenReturn(stepWrapper);
+    StepWrapperSteps.setStepWrapper(stepWrapper);
 
     String stepName = getStepName();
 

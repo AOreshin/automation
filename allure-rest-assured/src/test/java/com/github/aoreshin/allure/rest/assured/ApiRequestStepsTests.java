@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.specification.RequestSpecification;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -150,7 +151,9 @@ class ApiRequestStepsTests {
   private static Stream<Arguments> builderMockProvider() {
     String url = "https://google.com";
 
-    RequestSpecBuilder builder = spy(RequestSpecBuilder.class);
+    RequestSpecBuilder builder = mock(RequestSpecBuilder.class);
+    RequestSpecification requestSpecification = new RequestSpecBuilder().build();
+    when(builder.build()).thenReturn(requestSpecification);
 
     return Stream.of(
         Arguments.of(builder, ApiRequestSteps.apiRequest().setRequestSpecBuilder(builder), url));

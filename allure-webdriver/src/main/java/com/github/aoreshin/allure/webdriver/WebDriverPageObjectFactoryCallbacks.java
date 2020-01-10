@@ -17,6 +17,7 @@ public final class WebDriverPageObjectFactoryCallbacks
 
   private final Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet;
   private final WebDriverPageObjectFactory pageObjectFactory;
+  private AllureLifecycle lifecycle = Allure.getLifecycle();
 
   public WebDriverPageObjectFactoryCallbacks(
       Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet,
@@ -52,12 +53,12 @@ public final class WebDriverPageObjectFactoryCallbacks
   public void handleTestExecutionException(ExtensionContext context, Throwable throwable)
       throws Throwable {
     LOGGER.debug("Test ended with exception");
-    lifecycle().addAttachment("Screenshot", "image/png", "", pageObjectFactory.makeScreenshot());
+    lifecycle.addAttachment("Screenshot", "image/png", "", pageObjectFactory.makeScreenshot());
     throw throwable;
   }
 
   /** Only for testing */
-  AllureLifecycle lifecycle() {
-    return Allure.getLifecycle();
+  void setLifecycle(AllureLifecycle lifecycle) {
+    this.lifecycle = lifecycle;
   }
 }

@@ -12,9 +12,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * https://junit.org/junit5/docs/current/user-guide/#extensions-execution-order-wrapping-behavior
  */
 public final class FishTaggingExtension implements BeforeEachCallback, AfterEachCallback {
+  private String uuid = UUID.randomUUID().toString();
+
   @Override
   public void beforeEach(ExtensionContext context) {
-    ThreadContext.put("id", getUuid());
+    ThreadContext.put("id", uuid);
   }
 
   @Override
@@ -23,7 +25,7 @@ public final class FishTaggingExtension implements BeforeEachCallback, AfterEach
   }
 
   /** Only for testing */
-  String getUuid() {
-    return UUID.randomUUID().toString();
+  void setUuid(String uuid) {
+    this.uuid = uuid;
   }
 }

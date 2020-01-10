@@ -26,10 +26,9 @@ final class StepWrapperTests {
 
   @Test
   void startStepTest() {
-    StepWrapper stepWrapper = spy(StepWrapper.class);
+    StepWrapper stepWrapper = new StepWrapper();
     AllureLifecycle allureLifecycle = mock(AllureLifecycle.class);
-
-    when(stepWrapper.lifecycle()).thenReturn(allureLifecycle);
+    stepWrapper.setLifecycle(allureLifecycle);
 
     stepWrapper.startStep(getStepName());
 
@@ -39,11 +38,9 @@ final class StepWrapperTests {
   @Test
   void stoppedStepTest() {
     // Fixture setup
-    StepWrapper stepWrapper = spy(StepWrapper.class);
-
+    StepWrapper stepWrapper = new StepWrapper();
     AllureLifecycle allureLifecycle = mock(AllureLifecycle.class);
-
-    when(stepWrapper.lifecycle()).thenReturn(allureLifecycle);
+    stepWrapper.setLifecycle(allureLifecycle);
 
     Status status = Status.PASSED;
 

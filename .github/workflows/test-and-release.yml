@@ -3,7 +3,7 @@ name: Test, check style, coverage and release
 on:
   push:
     branches:
-      - 'releases/*'
+      - 'release/*'
 
 jobs:
   build:

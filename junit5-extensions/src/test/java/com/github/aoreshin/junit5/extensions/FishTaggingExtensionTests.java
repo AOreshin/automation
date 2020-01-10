@@ -14,9 +14,9 @@ final class FishTaggingExtensionTests {
   void beforeEachTest() {
     String uuid = UUID.randomUUID().toString();
 
-    FishTaggingExtension extension = Mockito.spy(new FishTaggingExtension());
+    FishTaggingExtension extension = new FishTaggingExtension();
 
-    when(extension.getUuid()).thenReturn(uuid);
+    extension.setUuid(uuid);
 
     extension.beforeEach(null);
 

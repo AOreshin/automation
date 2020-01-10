@@ -71,9 +71,8 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
         "Some ***** message" + "\n" + "Another ***** message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-        spy(
             new AllureConcurrentLoggerAttachmentsExtension(
-                logPath, removeFishTagRegex, sensitiveDataRegex));
+                logPath, removeFishTagRegex, sensitiveDataRegex);
 
     AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 

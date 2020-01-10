@@ -32,10 +32,33 @@ public final class ApiValidationSteps extends StepWrapperSteps<ApiValidationStep
     return this;
   }
 
-  @Step("Проверка содержания в {jsonPath} значения {expected}")
+  @Step("Проверка равенства {jsonPath} значению {expected}")
   public <T> ApiValidationSteps assertEqualsJson(String jsonPath, T expected) {
     T actual = response.getBody().jsonPath().get(jsonPath);
     assertEquals(expected, actual);
+    return this;
+  }
+
+  @Step("Проверка равенства полей соответствующим значениям {values}")
+  public <T> ApiValidationSteps assertEqualsJson(Map<String, String> values) {
+    List<Executable> executables =
+        values.entrySet().stream()
+            .map(
+                entry -> {
+                  String expected = entry.getValue();
+                  String actual = response.getBody().jsonPath().get(entry.getKey());
+                  return (Executable) () -> assertEquals(expected, actual);
+                })
+            .collect(toList());
+
+    assertAll(executables);
+    return this;
+  }
+
+  @Step("Проверка содержания в {jsonPath} значения {expected}")
+  public ApiValidationSteps assertContainsStringJson(String jsonPath, String expected) {
+    String actual = response.getBody().jsonPath().get(jsonPath);
+    assertTrue(actual.contains(expected), actual + " не содержит " + expected);
     return this;
   }
 
@@ -64,7 +87,26 @@ public final class ApiValidationSteps extends StepWrapperSteps<ApiValidationStep
     return this;
   }
 
-  @Step("Проверка не пустые {jsonPaths}")
+  @Step("Проверка {jsonPaths} пустые")
+  public ApiValidationSteps assertNullJson(List<String> jsonPaths) {
+    List<Executable> executables =
+        jsonPaths.stream()
+            .map(
+                jsonPath ->
+                    (Executable) () -> assertNull(response.getBody().jsonPath().get(jsonPath)))
+            .collect(toList());
+
+    assertAll(executables);
+    return this;
+  }
+
+  @Step("Проверка {jsonPath} не пуст")
+  public ApiValidationSteps assertNotNullJson(String jsonPath) {
+    assertNotNull(response.getBody().jsonPath().get(jsonPath));
+    return this;
+  }
+
+  @Step("Проверка {jsonPaths} не пустые")
   public ApiValidationSteps assertNotNullJson(List<String> jsonPaths) {
     List<Executable> executables =
         jsonPaths.stream()

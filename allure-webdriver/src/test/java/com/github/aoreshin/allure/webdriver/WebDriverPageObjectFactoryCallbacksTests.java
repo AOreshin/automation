@@ -130,9 +130,9 @@ class WebDriverPageObjectFactoryCallbacksTests {
     AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
     WebDriverPageObjectFactoryCallbacks callbacks =
-        spy(new WebDriverPageObjectFactoryCallbacks(null, factory));
+        new WebDriverPageObjectFactoryCallbacks(null, factory);
 
-    when(callbacks.lifecycle()).thenReturn(lifecycle);
+    callbacks.setLifecycle(lifecycle);
 
     FatalException exception = new FatalException();
 

@@ -32,8 +32,12 @@ public abstract class StepWrapperSteps<T extends StepWrapperSteps<T>> {
     return (T) this;
   }
 
-  /** Only for testing */
-  StepWrapper stepWrapper() {
+  private StepWrapper stepWrapper() {
     return stepWrapperThreadLocal.get();
+  }
+
+  /** Only for testing */
+  static void setStepWrapper(StepWrapper stepWrapper) {
+    stepWrapperThreadLocal.set(stepWrapper);
   }
 }

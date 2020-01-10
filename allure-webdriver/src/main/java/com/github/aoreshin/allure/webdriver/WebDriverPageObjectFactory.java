@@ -24,7 +24,7 @@ public final class WebDriverPageObjectFactory {
           WebDriverPageObject<? extends WebDriverPageObject<?>>>
       pageObjectCache = new HashMap<>();
 
-  WebDriverPageObjectFactory(final WebDriver webDriver, final WebDriverWait webDriverWait) {
+  public WebDriverPageObjectFactory(final WebDriver webDriver, final WebDriverWait webDriverWait) {
     this.webDriver = webDriver;
     this.webDriverWait = webDriverWait;
   }

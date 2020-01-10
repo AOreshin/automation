@@ -90,11 +90,11 @@ public final class ApiValidationSteps extends StepWrapperSteps<ApiValidationStep
   @Step("Проверка {jsonPaths} пустые")
   public ApiValidationSteps assertNullJson(List<String> jsonPaths) {
     List<Executable> executables =
-            jsonPaths.stream()
-                    .map(
-                            jsonPath ->
-                                    (Executable) () -> assertNull(response.getBody().jsonPath().get(jsonPath)))
-                    .collect(toList());
+        jsonPaths.stream()
+            .map(
+                jsonPath ->
+                    (Executable) () -> assertNull(response.getBody().jsonPath().get(jsonPath)))
+            .collect(toList());
 
     assertAll(executables);
     return this;

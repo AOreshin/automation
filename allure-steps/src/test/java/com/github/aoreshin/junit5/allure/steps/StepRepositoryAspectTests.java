@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -195,14 +194,16 @@ final class StepRepositoryAspectTests {
     verifyInterceptedMethodRunsOnlyOneTime(proceedingJoinPoint, args);
   }
 
-  @Test
-  void anyPublicMethodTest() {
-    assertDoesNotThrow(() -> new StepRepositoryAspect().anyPublicMethod());
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void anyPublicMethodTest(StepRepositoryAspect stepRepositoryAspect) {
+    assertDoesNotThrow(() -> stepRepositoryAspect.anyPublicMethod());
   }
 
-  @Test
-  void withAnnotationTest() {
-    assertDoesNotThrow(() -> new StepRepositoryAspect().withAnnotation());
+  @ParameterizedTest
+  @MethodSource("getMocks")
+  void withAnnotationTest(StepRepositoryAspect stepRepositoryAspect) {
+    assertDoesNotThrow(() -> stepRepositoryAspect.withAnnotation());
   }
 
   private void verifyStepsAreCreated(AllureLifecycle lifecycle, Status status) {
@@ -241,13 +242,13 @@ final class StepRepositoryAspectTests {
   }
 
   private static Stream<Arguments> getMocks() {
-    StepRepositoryAspect stepRepositoryAspect = spy(StepRepositoryAspect.class);
+    StepRepositoryAspect stepRepositoryAspect = new StepRepositoryAspect();
     AllureLifecycle allureLifecycle = mock(AllureLifecycle.class);
     ProceedingJoinPoint proceedingJoinPoint = mock(ProceedingJoinPoint.class);
     MethodSignature methodSignature = mock(MethodSignature.class);
     Method method = mock(Method.class);
 
-    when(stepRepositoryAspect.getLifecycle()).thenReturn(allureLifecycle);
+    stepRepositoryAspect.setLifecycle(allureLifecycle);
     when(proceedingJoinPoint.getSignature()).thenReturn(methodSignature);
     when(methodSignature.getMethod()).thenReturn(method);
 

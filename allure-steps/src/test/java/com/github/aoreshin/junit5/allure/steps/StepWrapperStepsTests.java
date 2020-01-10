@@ -5,8 +5,6 @@ import static org.mockito.Mockito.*;
 
 import io.qameta.allure.model.Status;
 import java.util.UUID;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 final class StepWrapperStepsTests {
@@ -17,7 +15,7 @@ final class StepWrapperStepsTests {
   void startStepEmptyStepNameThrowsNullPointerExceptionTest() {
     StepWrapperSteps<StepWrapperStepsConcrete> stepWrapperSteps = new StepWrapperStepsConcrete();
     StepWrapperSteps.setStepWrapper(new StepWrapper());
-     assertThrows(NullPointerException.class, () -> stepWrapperSteps.startStep(null));
+    assertThrows(NullPointerException.class, () -> stepWrapperSteps.startStep(null));
   }
 
   @Test

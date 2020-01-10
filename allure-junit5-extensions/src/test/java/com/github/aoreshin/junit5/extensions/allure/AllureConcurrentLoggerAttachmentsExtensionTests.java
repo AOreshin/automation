@@ -71,8 +71,8 @@ final class AllureConcurrentLoggerAttachmentsExtensionTests {
         "Some ***** message" + "\n" + "Another ***** message" + "\n" + "Blah-blah-blah";
 
     AllureConcurrentLoggerAttachmentsExtension extension =
-            new AllureConcurrentLoggerAttachmentsExtension(
-                logPath, removeFishTagRegex, sensitiveDataRegex);
+        new AllureConcurrentLoggerAttachmentsExtension(
+            logPath, removeFishTagRegex, sensitiveDataRegex);
 
     AllureLifecycle lifecycle = setUpLifecycleMock(extension);
 

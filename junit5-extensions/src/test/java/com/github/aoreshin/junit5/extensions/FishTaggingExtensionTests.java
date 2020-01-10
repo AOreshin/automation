@@ -1,13 +1,11 @@
 package com.github.aoreshin.junit5.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 import org.apache.logging.log4j.ThreadContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 final class FishTaggingExtensionTests {
   @Test

@@ -22,7 +22,6 @@ jobs:
           test
           spotlessJavaCheck
           jacocoTestCoverageVerification
-          versionDisplay
           signMavenJavaPublication
           publishAllPublicationsToSonatypeRepository
           closeAndReleaseRepository

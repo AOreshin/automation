@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 
 /** Helps to configure invocation context of the test template */
-public final class TestTemplateInvocationContextBuilder {
+public class TestTemplateInvocationContextBuilder {
   private final List<Extension> extensions = new ArrayList<>();
   private String displayName;
   private String displayNamePrefix;

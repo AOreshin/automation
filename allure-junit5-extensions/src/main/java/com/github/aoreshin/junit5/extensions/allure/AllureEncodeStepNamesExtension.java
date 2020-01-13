@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *       method and pass regex through constructor.
  * </ul>
  */
-public final class AllureEncodeStepNamesExtension implements AfterEachCallback {
+public class AllureEncodeStepNamesExtension implements AfterEachCallback {
   private final String regex;
 
   public AllureEncodeStepNamesExtension() {

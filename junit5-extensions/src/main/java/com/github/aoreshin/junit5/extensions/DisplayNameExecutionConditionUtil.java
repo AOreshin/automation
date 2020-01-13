@@ -3,7 +3,7 @@ package com.github.aoreshin.junit5.extensions;
 import java.util.Arrays;
 import java.util.List;
 
-final class DisplayNameExecutionConditionUtil {
+class DisplayNameExecutionConditionUtil {
   private DisplayNameExecutionConditionUtil() {}
 
   static List<String> getDisplayNamesForSystemProperty(String property) {

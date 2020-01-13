@@ -4,12 +4,14 @@ import static io.restassured.RestAssured.given;
 
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import io.qameta.allure.Step;
+import io.restassured.mapper.ObjectMapper;
 import io.restassured.specification.RequestSpecification;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /** Steps for building request and sending it */
-public final class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
+public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
   private RequestSpecification requestSpecification = given();
 
   private ApiRequestSteps() {}
@@ -19,7 +21,7 @@ public final class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
   }
 
   @Step("Добавление заголовка {name}={value}")
-  public ApiRequestSteps headers(String name, String value) {
+  public ApiRequestSteps header(String name, String value) {
     requestSpecification.header(name, value);
     return this;
   }
@@ -54,9 +56,33 @@ public final class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return this;
   }
 
+  @Step("Добавление query параметров {name}={parameterValues}")
+  public ApiRequestSteps queryParam(String name, Object... parameterValues) {
+    requestSpecification.queryParam(name, parameterValues);
+    return this;
+  }
+
+  @Step("Добавление query параметров {name}={parameterValues}")
+  public ApiRequestSteps queryParam(String name, Collection<?> parameterValues) {
+    requestSpecification.queryParam(name, parameterValues);
+    return this;
+  }
+
+  @Step("Добавление мапы query параметров {paramMap}")
+  public ApiRequestSteps queryParams(Map<String, ?> paramMap) {
+    requestSpecification.queryParams(paramMap);
+    return this;
+  }
+
   @Step("Добавление тела запроса")
   public ApiRequestSteps body(Object body) {
     requestSpecification.body(body);
+    return this;
+  }
+
+  @Step("Обработка и добавление тела запроса с {objectMapper}")
+  public ApiRequestSteps body(Object body, ObjectMapper objectMapper) {
+    requestSpecification.body(body, objectMapper);
     return this;
   }
 

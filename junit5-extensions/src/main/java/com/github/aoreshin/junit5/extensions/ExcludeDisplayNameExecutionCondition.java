@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /** Excludes test when it's display name contains value specified in excludeDisplayNames property */
-public final class ExcludeDisplayNameExecutionCondition implements ExecutionCondition {
+public class ExcludeDisplayNameExecutionCondition implements ExecutionCondition {
   private static final String PROPERTY_NAME = "excludeDisplayNames";
   private final List<String> DISPLAY_NAMES_LIST = getDisplayNamesForSystemProperty(PROPERTY_NAME);
 

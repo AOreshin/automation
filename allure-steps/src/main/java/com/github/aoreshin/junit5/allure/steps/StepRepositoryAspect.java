@@ -40,7 +40,7 @@ import org.springframework.data.util.AnnotatedTypeScanner;
  * </ul>
  */
 @Aspect
-public final class StepRepositoryAspect {
+public class StepRepositoryAspect {
   private static final Set<Class<?>> STEP_REPOSITORY_INTERFACES =
       new AnnotatedTypeScanner(true, StepRepository.class)
           .findTypes("").stream().filter(Class::isInterface).collect(toSet());

@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /** Class that helps to create nested Allure steps directly in test code */
-final class StepWrapper {
+class StepWrapper {
   private static final Logger LOGGER = LogManager.getLogger();
   private final Stack<String> uuidStack = new Stack<>();
   private AllureLifecycle lifecycle = Allure.getLifecycle();

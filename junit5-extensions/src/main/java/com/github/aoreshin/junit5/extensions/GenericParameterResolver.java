@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  *
  * @param <T> - type of parameter to be resolved
  */
-public final class GenericParameterResolver<T> implements ParameterResolver {
+public class GenericParameterResolver<T> implements ParameterResolver {
   private final T value;
   private final Class<T> parameterType;
   private final String name;

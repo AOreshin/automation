@@ -51,7 +51,7 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
   }
 
   @Step("Добавление мапы параметров {paramMap}")
-  public ApiRequestSteps params(Map<String, String> paramMap) {
+  public ApiRequestSteps params(Map<String, ?> paramMap) {
     requestSpecification.params(paramMap);
     return this;
   }

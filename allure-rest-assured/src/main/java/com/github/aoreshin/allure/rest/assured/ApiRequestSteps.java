@@ -32,9 +32,15 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return this;
   }
 
-  @Step("Добавление cookie файла")
+  @Step("Добавление cookie {cookieName}")
   public ApiRequestSteps cookie(String cookieName) {
     requestSpecification.cookie(cookieName);
+    return this;
+  }
+
+  @Step("Добавление cookies {cookies}")
+  public ApiRequestSteps cookies(Map<String, ?> cookies) {
+    requestSpecification.cookies(cookies);
     return this;
   }
 
@@ -71,6 +77,24 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
   @Step("Добавление мапы query параметров {paramMap}")
   public ApiRequestSteps queryParams(Map<String, ?> paramMap) {
     requestSpecification.queryParams(paramMap);
+    return this;
+  }
+
+  @Step("Добавление form параметра {parameterName}={parameterValues}")
+  public ApiRequestSteps formParam(String parameterName, Object... parameterValues) {
+    requestSpecification.formParam(parameterName, parameterValues);
+    return this;
+  }
+
+  @Step("Добавление form параметра {parameterName}={parameterValues}")
+  public ApiRequestSteps formParam(String parameterName, Collection<?> parameterValues) {
+    requestSpecification.formParam(parameterName, parameterValues);
+    return this;
+  }
+
+  @Step("Добавление мапы form параметров {paramMap}")
+  public ApiRequestSteps formParams(Map<String, ?> paramMap) {
+    requestSpecification.formParams(paramMap);
     return this;
   }
 

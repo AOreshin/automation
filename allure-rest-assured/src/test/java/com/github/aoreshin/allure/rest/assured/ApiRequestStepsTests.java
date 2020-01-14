@@ -58,6 +58,16 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
+  void cookies(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    Map<String, ?> cookies = Map.of("cookie", 1, "candy", "blah", "chocolate", new Object());
+
+    apiRequestSteps.cookies(cookies);
+
+    verify(requestSpec, only()).cookies(cookies);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
   void param(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String name = "parameter";
     String value = "value";
@@ -123,6 +133,39 @@ class ApiRequestStepsTests {
     apiRequestSteps.queryParams(params);
 
     verify(requestSpec, only()).queryParams(params);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParamObject(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Object parameterValue1 = new Object();
+    Object parameterValue2 = new Object();
+
+    apiRequestSteps.formParam(name, parameterValue1, parameterValue2);
+
+    verify(requestSpec, only()).formParam(name, parameterValue1, parameterValue2);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParamCollection(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Collection<?> parameterValue = List.of("param1", new Object());
+
+    apiRequestSteps.formParam(name, parameterValue);
+
+    verify(requestSpec, only()).formParam(name, parameterValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParams(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    Map<String, ?> params = Map.of("param1", new Object(), "param2", 777);
+
+    apiRequestSteps.formParams(params);
+
+    verify(requestSpec, only()).formParams(params);
   }
 
   @ParameterizedTest

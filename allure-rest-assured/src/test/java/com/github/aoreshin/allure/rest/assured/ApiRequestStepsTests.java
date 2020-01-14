@@ -3,8 +3,10 @@ package com.github.aoreshin.allure.rest.assured;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.*;
 
-import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.internal.mapping.Jackson2Mapper;
+import io.restassured.mapper.ObjectMapper;
 import io.restassured.specification.RequestSpecification;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -20,160 +22,247 @@ class ApiRequestStepsTests {
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addHeader(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void header(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String name = "header";
     String value = "value";
 
-    apiRequestSteps.addHeader(name, value);
+    apiRequestSteps.header(name, value);
 
-    verify(builder, only()).addHeader(name, value);
+    verify(requestSpec, only()).header(name, value);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addHeaderMap(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void headers(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     Map<String, String> headers =
         Map.of(
             "header1", "value1",
             "header2", "value2",
             "header3", "value3");
 
-    apiRequestSteps.addHeader(headers);
+    apiRequestSteps.headers(headers);
 
-    verify(builder, only()).addHeaders(headers);
+    verify(requestSpec, only()).headers(headers);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addCookie(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void cookie(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String cookieName = "ILOVECOOKIES";
 
-    apiRequestSteps.addCookie(cookieName);
+    apiRequestSteps.cookie(cookieName);
 
-    verify(builder, only()).addCookie(cookieName);
+    verify(requestSpec, only()).cookie(cookieName);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addParam(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void cookies(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    Map<String, ?> cookies = Map.of("cookie", 1, "candy", "blah", "chocolate", new Object());
+
+    apiRequestSteps.cookies(cookies);
+
+    verify(requestSpec, only()).cookies(cookies);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void param(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String name = "parameter";
     String value = "value";
 
-    apiRequestSteps.addParam(name, value);
+    apiRequestSteps.param(name, value);
 
-    verify(builder, only()).addParam(name, value);
+    verify(requestSpec, only()).param(name, value);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addParamList(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void paramList(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String name = "param";
     List<String> parameters = List.of("value1", "value2", "value3");
 
-    apiRequestSteps.addParam(name, parameters);
+    apiRequestSteps.param(name, parameters);
 
-    verify(builder, only()).addParam(name, parameters);
+    verify(requestSpec, only()).param(name, parameters);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void addParamMap(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void params(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     Map<String, String> parameters =
         Map.of(
             "header1", "value1",
             "header2", "value2",
             "header3", "value3");
 
-    apiRequestSteps.addParam(parameters);
+    apiRequestSteps.params(parameters);
 
-    verify(builder, only()).addParams(parameters);
+    verify(requestSpec, only()).params(parameters);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void setBody(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps) {
+  @MethodSource("requestSpecMockProvider")
+  void queryParamObject(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Object parameterValue1 = new Object();
+    Object parameterValue2 = new Object();
+
+    apiRequestSteps.queryParam(name, parameterValue1, parameterValue2);
+
+    verify(requestSpec, only()).queryParam(name, parameterValue1, parameterValue2);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void queryParamCollection(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Collection<?> parameterValue = List.of("param1", new Object());
+
+    apiRequestSteps.queryParam(name, parameterValue);
+
+    verify(requestSpec, only()).queryParam(name, parameterValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void queryParams(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    Map<String, ?> params = Map.of("param1", new Object(), "param2", 777);
+
+    apiRequestSteps.queryParams(params);
+
+    verify(requestSpec, only()).queryParams(params);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParamObject(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Object parameterValue1 = new Object();
+    Object parameterValue2 = new Object();
+
+    apiRequestSteps.formParam(name, parameterValue1, parameterValue2);
+
+    verify(requestSpec, only()).formParam(name, parameterValue1, parameterValue2);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParamCollection(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String name = "param";
+    Collection<?> parameterValue = List.of("param1", new Object());
+
+    apiRequestSteps.formParam(name, parameterValue);
+
+    verify(requestSpec, only()).formParam(name, parameterValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void formParams(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    Map<String, ?> params = Map.of("param1", new Object(), "param2", 777);
+
+    apiRequestSteps.formParams(params);
+
+    verify(requestSpec, only()).formParams(params);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void body(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    class Person {
+      private final String name;
+      private final int age;
+
+      Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+      }
+    }
+
     Person person = new Person("Ozzy Osbourne", 71);
 
-    apiRequestSteps.setBody(person);
+    apiRequestSteps.body(person);
 
-    verify(builder, only()).setBody(person);
+    verify(requestSpec, only()).body(person);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void post(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void bodyMapper(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    class Person {
+      private final String name;
+      private final int age;
+
+      Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+      }
+    }
+
+    Person person = new Person("Ozzy Osbourne", 71);
+    ObjectMapper mapper = new Jackson2Mapper(null);
+    apiRequestSteps.body(person, mapper);
+
+    verify(requestSpec, only()).body(person, mapper);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void post(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.post(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).post(url);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void put(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void put(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.put(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).put(url);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void get(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void get(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.get(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).get(url);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void delete(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void delete(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.delete(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).delete(url);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void head(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void head(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.head(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).head(url);
   }
 
   @ParameterizedTest
-  @MethodSource("builderMockProvider")
-  void patch(RequestSpecBuilder builder, ApiRequestSteps apiRequestSteps, String url) {
+  @MethodSource("requestSpecMockProvider")
+  void patch(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.patch(url);
 
-    verify(builder, only()).build();
+    verify(requestSpec, only()).patch(url);
   }
 
-  private static Stream<Arguments> builderMockProvider() {
+  private static Stream<Arguments> requestSpecMockProvider() {
     String url = "https://google.com";
 
-    RequestSpecBuilder builder = mock(RequestSpecBuilder.class);
-    RequestSpecification requestSpecification = new RequestSpecBuilder().build();
-    when(builder.build()).thenReturn(requestSpecification);
+    RequestSpecification requestSpecification = mock(RequestSpecification.class);
+    ApiRequestSteps apiRequestSteps = ApiRequestSteps.apiRequest();
+    apiRequestSteps.setRequestSpecification(requestSpecification);
 
-    return Stream.of(
-        Arguments.of(builder, ApiRequestSteps.apiRequest().setRequestSpecBuilder(builder), url));
-  }
-
-  private static class Person {
-    private final String name;
-    private final int age;
-
-    Person(String name, int age) {
-      this.name = name;
-      this.age = age;
-    }
-
-    public String getName() {
-      return name;
-    }
-
-    public int getAge() {
-      return age;
-    }
+    return Stream.of(Arguments.of(requestSpecification, apiRequestSteps, url));
   }
 }

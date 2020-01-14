@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 /**
  * Includes test when it's display name matches regex specified in includeDisplayNamesRegex property
  */
-public final class IncludeDisplayNameRegexExecutionCondition implements ExecutionCondition {
+public class IncludeDisplayNameRegexExecutionCondition implements ExecutionCondition {
   private static final String PROPERTY_NAME = "includeDisplayNamesRegex";
   private final String PATTERN = System.getProperty(PROPERTY_NAME);
 

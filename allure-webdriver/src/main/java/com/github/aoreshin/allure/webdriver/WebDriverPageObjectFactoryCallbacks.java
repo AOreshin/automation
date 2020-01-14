@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.*;
  * Extension that resolves specified page object classes as test parameters closes factory after
  * test execution, makes screenshot when test fails
  */
-public final class WebDriverPageObjectFactoryCallbacks
+public class WebDriverPageObjectFactoryCallbacks
     implements AfterEachCallback, ParameterResolver, TestExecutionExceptionHandler {
   private static final Logger LOGGER = LogManager.getLogger();
 

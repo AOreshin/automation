@@ -27,7 +27,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * <p>Use com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder addExtension
  * method and pass constructor parameters.
  */
-public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
+public class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
   private final String logPath;
   private final String removeFishTagRegex;
   private final String removeSensitiveDataRegex;

@@ -13,7 +13,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /** Caching page object factory */
-public final class WebDriverPageObjectFactory {
+public class WebDriverPageObjectFactory {
   private static final Logger LOGGER = LogManager.getLogger(WebDriverPageObjectFactory.class);
 
   private int COUNTER;

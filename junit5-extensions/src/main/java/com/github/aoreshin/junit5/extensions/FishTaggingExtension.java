@@ -11,7 +11,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * ThreadContext. Should be highest priority extension, to capture logs from other callbacks
  * https://junit.org/junit5/docs/current/user-guide/#extensions-execution-order-wrapping-behavior
  */
-public final class FishTaggingExtension implements BeforeEachCallback, AfterEachCallback {
+public class FishTaggingExtension implements BeforeEachCallback, AfterEachCallback {
   private String uuid = UUID.randomUUID().toString();
 
   @Override

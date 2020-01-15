@@ -136,9 +136,39 @@ class ApiExtractingStepsTests {
 
   @Test
   void saveCookie() {
+    // Fixture setup
+    String cookieName = "deliciousCookie";
+    String key = "key";
+    String value = "oreo";
+
+    Map<String, Object> map = new HashMap<>();
+
+    Response response = mock(Response.class);
+    when(response.cookie(cookieName)).thenReturn(value);
+
+    ApiExtractingSteps steps = new ApiExtractingSteps(response);
+
+    // Executing SUT
+    steps.saveCookie(cookieName, key, map);
+
+    assertEquals(value, map.get(key));
   }
 
   @Test
   void saveAllCookies() {
+    // Fixture setup
+    Map<String, String> cookies = Map.of("one", "two", "three", "four");
+    String key = "keyyy";
+    Map<String, Object> map = new HashMap<>();
+
+    Response response = mock(Response.class);
+    when(response.cookies()).thenReturn(cookies);
+
+    ApiExtractingSteps steps = new ApiExtractingSteps(response);
+
+    // Executing SUT
+    steps.saveAllCookies(key, map);
+
+    assertEquals(cookies, map.get(key));
   }
 }

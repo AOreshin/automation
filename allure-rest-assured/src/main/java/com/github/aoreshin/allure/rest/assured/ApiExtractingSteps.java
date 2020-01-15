@@ -40,19 +40,40 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
   }
 
   @Step("Сохранение заголовка {header} как {key}")
-  public <T> ApiExtractingSteps saveHeader(String header, String key, Map<String, String> map) {
+  public ApiExtractingSteps saveHeader(String header, String key, Map<String, String> map) {
     String value = response.getHeader(header);
     map.put(key, value);
     return this;
   }
 
   @Step("Сохранение заголовков как соответствующие им ключи {pathsAndKeys}")
-  public <T> ApiExtractingSteps saveHeader(
+  public ApiExtractingSteps saveHeader(
       Map<String, String> headersAndKeys, Map<String, String> map) {
     Map<String, String> values =
         headersAndKeys.entrySet().stream()
             .collect(toMap(Map.Entry::getValue, entry -> response.getHeader(entry.getKey())));
     map.putAll(values);
+    return this;
+  }
+
+  @Step("Сохранение cookie {cookieName}")
+  public ApiExtractingSteps saveCookie(String cookieName, Map<String, String> map) {
+    String cookie = response.cookie(cookieName);
+    map.put(cookieName, cookie);
+    return this;
+  }
+
+  @Step("Сохранение cookie {cookieName} как {key}")
+  public ApiExtractingSteps saveCookie(String cookieName, String key, Map<String, String> map) {
+    String cookie = response.cookie(cookieName);
+    map.put(cookieName, cookie);
+    return this;
+  }
+
+  @Step("Сохранение всех cookies")
+  public ApiExtractingSteps saveAllCookies(Map<String, String> map) {
+    Map<String, String> cookies = response.cookies();
+    map.putAll(cookies);
     return this;
   }
 

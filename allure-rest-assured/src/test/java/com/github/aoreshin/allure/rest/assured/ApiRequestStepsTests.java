@@ -84,7 +84,7 @@ class ApiRequestStepsTests {
     String firstCookieName = "cookie1";
     String firstCookieValue = "1";
 
-    Object[] otherValues = new Object[]{"cookie", 1, "candy", "blah", "chocolate", new Object()};
+    Object[] otherValues = new Object[] {"cookie", 1, "candy", "blah", "chocolate", new Object()};
 
     apiRequestSteps.cookies(firstCookieName, firstCookieValue, otherValues);
 

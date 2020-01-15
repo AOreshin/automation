@@ -17,7 +17,8 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
   }
 
   @Step("Сохранение {jsonPath} как {key}")
-  public <T> ApiExtractingSteps saveBodyJsonPath(String jsonPath, String key, Map<String, Object> map, Class<T> type) {
+  public <T> ApiExtractingSteps saveBodyJsonPath(
+      String jsonPath, String key, Map<String, Object> map, Class<T> type) {
     T value = response.getBody().jsonPath().get(jsonPath);
     map.put(key, value);
     return this;

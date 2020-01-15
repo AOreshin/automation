@@ -127,8 +127,6 @@ class ApiExtractingStepsTests {
     assertEquals(expected, map);
   }
 
-
-
   @Test
   void next() {
     assertDoesNotThrow(() -> new ApiExtractingSteps(null).next());

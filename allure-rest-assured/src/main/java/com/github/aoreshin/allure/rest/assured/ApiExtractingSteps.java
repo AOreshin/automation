@@ -17,7 +17,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
   }
 
   @Step("Сохранение {jsonPath} как {key}")
-  public <T> ApiExtractingSteps saveBodyJsonPath(String jsonPath, String key, Map<String, T> map) {
+  public <T> ApiExtractingSteps saveBodyJsonPath(String jsonPath, String key, Map<String, Object> map, Class<T> type) {
     T value = response.getBody().jsonPath().get(jsonPath);
     map.put(key, value);
     return this;
@@ -25,7 +25,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
 
   @Step("Сохранение полей с соответствующими ключами {pathsAndKeys}")
   public <T> ApiExtractingSteps saveBodyJsonPath(
-      Map<String, String> pathsAndKeys, Map<String, T> map) {
+      Map<String, String> pathsAndKeys, Map<String, Object> map, Class<T> type) {
     Map<String, T> values =
         pathsAndKeys.entrySet().stream()
             .collect(
@@ -40,7 +40,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
   }
 
   @Step("Сохранение заголовка {header} как {key}")
-  public ApiExtractingSteps saveHeader(String header, String key, Map<String, String> map) {
+  public ApiExtractingSteps saveHeader(String header, String key, Map<String, Object> map) {
     String value = response.getHeader(header);
     map.put(key, value);
     return this;
@@ -48,7 +48,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
 
   @Step("Сохранение заголовков как соответствующие им ключи {pathsAndKeys}")
   public ApiExtractingSteps saveHeader(
-      Map<String, String> headersAndKeys, Map<String, String> map) {
+      Map<String, String> headersAndKeys, Map<String, Object> map) {
     Map<String, String> values =
         headersAndKeys.entrySet().stream()
             .collect(toMap(Map.Entry::getValue, entry -> response.getHeader(entry.getKey())));
@@ -56,24 +56,17 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
     return this;
   }
 
-  @Step("Сохранение cookie {cookieName}")
-  public ApiExtractingSteps saveCookie(String cookieName, Map<String, String> map) {
-    String cookie = response.cookie(cookieName);
-    map.put(cookieName, cookie);
-    return this;
-  }
-
   @Step("Сохранение cookie {cookieName} как {key}")
-  public ApiExtractingSteps saveCookie(String cookieName, String key, Map<String, String> map) {
+  public ApiExtractingSteps saveCookie(String cookieName, String key, Map<String, Object> map) {
     String cookie = response.cookie(cookieName);
-    map.put(cookieName, cookie);
+    map.put(key, cookie);
     return this;
   }
 
-  @Step("Сохранение всех cookies")
-  public ApiExtractingSteps saveAllCookies(Map<String, String> map) {
+  @Step("Сохранение всех cookies как {key}")
+  public ApiExtractingSteps saveAllCookies(String key, Map<String, Object> map) {
     Map<String, String> cookies = response.cookies();
-    map.putAll(cookies);
+    map.put(key, cookies);
     return this;
   }
 

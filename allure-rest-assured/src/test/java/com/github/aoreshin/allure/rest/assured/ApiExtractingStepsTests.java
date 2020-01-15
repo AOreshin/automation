@@ -16,9 +16,9 @@ class ApiExtractingStepsTests {
     // Fixture setup
     String jsonPathExpression = "path";
     String key = "key";
-    String value = "eatSleepRepeat";
+    Integer value = 1;
 
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
 
     Response response =
         mock(Response.class, withSettings().defaultAnswer(Answers.RETURNS_DEEP_STUBS));
@@ -28,7 +28,7 @@ class ApiExtractingStepsTests {
     ApiExtractingSteps steps = new ApiExtractingSteps(response);
 
     // Executing SUT
-    steps.saveBodyJsonPath(jsonPathExpression, key, map);
+    steps.saveBodyJsonPath(jsonPathExpression, key, map, Integer.class);
 
     assertEquals(value, map.get(key));
   }
@@ -48,13 +48,13 @@ class ApiExtractingStepsTests {
             "expression2", "value2",
             "expression3", "value3");
 
-    Map<String, String> expected =
+    Map<String, Object> expected =
         Map.of(
             "key1", "value1",
             "key2", "value2",
             "key3", "value3");
 
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
 
     Response response =
         mock(Response.class, withSettings().defaultAnswer(Answers.RETURNS_DEEP_STUBS));
@@ -66,7 +66,7 @@ class ApiExtractingStepsTests {
     ApiExtractingSteps steps = new ApiExtractingSteps(response);
 
     // Executing SUT
-    steps.saveBodyJsonPath(pathsAndKeys, map);
+    steps.saveBodyJsonPath(pathsAndKeys, map, String.class);
 
     assertEquals(expected, map);
   }
@@ -78,7 +78,7 @@ class ApiExtractingStepsTests {
     String key = "authorization";
     String value = "password";
 
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
 
     Response response = mock(Response.class);
 
@@ -107,13 +107,13 @@ class ApiExtractingStepsTests {
             "header2", "value2",
             "header3", "value3");
 
-    Map<String, String> expected =
+    Map<String, Object> expected =
         Map.of(
             "key1", "value1",
             "key2", "value2",
             "key3", "value3");
 
-    Map<String, String> map = new HashMap<>();
+    Map<String, Object> map = new HashMap<>();
 
     Response response = mock(Response.class);
 
@@ -127,8 +127,18 @@ class ApiExtractingStepsTests {
     assertEquals(expected, map);
   }
 
+
+
   @Test
   void next() {
     assertDoesNotThrow(() -> new ApiExtractingSteps(null).next());
+  }
+
+  @Test
+  void saveCookie() {
+  }
+
+  @Test
+  void saveAllCookies() {
   }
 }

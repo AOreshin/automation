@@ -48,7 +48,7 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
-  void cookie(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+  void cookieName(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     String cookieName = "ILOVECOOKIES";
 
     apiRequestSteps.cookie(cookieName);
@@ -58,12 +58,37 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
-  void cookies(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+  void cookieValue(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String cookieName = "ILOVECOOKIES";
+    Object value = new Object();
+    Object anotherValue = new Object();
+
+    apiRequestSteps.cookie(cookieName, value, anotherValue);
+
+    verify(requestSpec, only()).cookie(cookieName, value, anotherValue);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void cookiesMap(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
     Map<String, ?> cookies = Map.of("cookie", 1, "candy", "blah", "chocolate", new Object());
 
     apiRequestSteps.cookies(cookies);
 
     verify(requestSpec, only()).cookies(cookies);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void cookiesVarArgs(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps) {
+    String firstCookieName = "cookie1";
+    String firstCookieValue = "1";
+
+    Object[] otherValues = new Object[] {"cookie", 1, "candy", "blah", "chocolate", new Object()};
+
+    apiRequestSteps.cookies(firstCookieName, firstCookieValue, otherValues);
+
+    verify(requestSpec, only()).cookies(firstCookieName, firstCookieValue, otherValues);
   }
 
   @ParameterizedTest

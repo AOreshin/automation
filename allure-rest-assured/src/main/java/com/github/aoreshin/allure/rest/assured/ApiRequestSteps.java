@@ -38,7 +38,7 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return this;
   }
 
-  @Step("Добавление cookie {firstCookieName}={firstCookieValue}, {cookieNameValuePairs}")
+  @Step("Добавление cookie {cookieName}={value}, {additionalValues}")
   public ApiRequestSteps cookie(String cookieName, Object value, Object... additionalValues) {
     requestSpecification.cookie(cookieName, value, additionalValues);
     return this;

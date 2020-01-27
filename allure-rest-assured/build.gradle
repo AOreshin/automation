@@ -7,4 +7,5 @@ dependencies {
     implementation "io.rest-assured:rest-assured:${restAssuredVersion}"
     implementation "io.rest-assured:json-path:${restAssuredVersion}"
     implementation "io.rest-assured:xml-path:${restAssuredVersion}"
+    implementation "org.awaitility:awaitility:${awaitilityVersion}"
 }

@@ -5,10 +5,14 @@ import static io.restassured.RestAssured.given;
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import io.qameta.allure.Step;
 import io.restassured.mapper.ObjectMapper;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import org.awaitility.Awaitility;
+import org.hamcrest.Matcher;
 
 /** Steps for building request and sending it */
 public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
@@ -128,9 +132,19 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return new ApiValidationSteps(requestSpecification.post(url));
   }
 
+  @Step("Отправка POST запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps post(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.post(url), matcher);
+  }
+
   @Step("Отправка PUT запроса на {url}")
   public ApiValidationSteps put(String url) {
     return new ApiValidationSteps(requestSpecification.put(url));
+  }
+
+  @Step("Отправка PUT запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps put(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.put(url), matcher);
   }
 
   @Step("Отправка GET запроса на {url}")
@@ -138,9 +152,19 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return new ApiValidationSteps(requestSpecification.get(url));
   }
 
+  @Step("Отправка GET запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps get(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.get(url), matcher);
+  }
+
   @Step("Отправка DELETE запроса на {url}")
   public ApiValidationSteps delete(String url) {
     return new ApiValidationSteps(requestSpecification.delete(url));
+  }
+
+  @Step("Отправка DELETE запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps delete(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.delete(url), matcher);
   }
 
   @Step("Отправка HEAD запроса на {url}")
@@ -148,13 +172,29 @@ public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
     return new ApiValidationSteps(requestSpecification.head(url));
   }
 
+  @Step("Отправка HEAD запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps head(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.head(url), matcher);
+  }
+
   @Step("Отправка PATCH запроса на {url}")
   public ApiValidationSteps patch(String url) {
     return new ApiValidationSteps(requestSpecification.patch(url));
   }
 
+  @Step("Отправка PATCH запроса на {url} пока не выполнится условие: {conditionMessage}")
+  public ApiValidationSteps patch(String url, Matcher<Response> matcher, String conditionMessage) {
+    return getValidationSteps(() -> requestSpecification.patch(url), matcher);
+  }
+
   /** Only for testing */
   void setRequestSpecification(RequestSpecification requestSpecification) {
     this.requestSpecification = requestSpecification;
+  }
+
+  private ApiValidationSteps getValidationSteps(
+      Callable<Response> callable, Matcher<Response> matcher) {
+    Response response = Awaitility.given().until(callable, matcher);
+    return new ApiValidationSteps(response);
   }
 }

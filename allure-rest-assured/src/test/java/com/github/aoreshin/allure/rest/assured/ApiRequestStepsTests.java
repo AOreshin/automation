@@ -1,21 +1,37 @@
 package com.github.aoreshin.allure.rest.assured;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
+import io.restassured.builder.ResponseBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.mapper.ObjectMapper;
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.awaitility.Awaitility;
+import org.awaitility.core.ConditionTimeoutException;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class ApiRequestStepsTests {
+  static {
+    Awaitility.setDefaultTimeout(Duration.ofMillis(500));
+    Awaitility.setDefaultPollInterval(Duration.ofMillis(100));
+  }
+
+  private static final String CONDITION_MESSAGE = "statusCode equals 200";
+
   @Test
   void apiRequest() {
     assertDoesNotThrow(ApiRequestSteps::apiRequest);
@@ -243,10 +259,76 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
+  void postPollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.post(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.post(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).post(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void postPollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.post(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.post(url, matcher, CONDITION_MESSAGE));
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
   void put(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.put(url);
 
     verify(requestSpec, only()).put(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void putPollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.put(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.put(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).put(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void putPollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.put(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.put(url, matcher, CONDITION_MESSAGE));
   }
 
   @ParameterizedTest
@@ -259,10 +341,76 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
+  void getPollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.get(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.get(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).get(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void getPollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.get(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.get(url, matcher, CONDITION_MESSAGE));
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
   void delete(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.delete(url);
 
     verify(requestSpec, only()).delete(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void deletePollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.delete(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.delete(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).delete(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void deletePollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.delete(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.delete(url, matcher, CONDITION_MESSAGE));
   }
 
   @ParameterizedTest
@@ -275,10 +423,76 @@ class ApiRequestStepsTests {
 
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
+  void headPollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.head(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.head(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).head(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void headPollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.head(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.head(url, matcher, CONDITION_MESSAGE));
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
   void patch(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
     apiRequestSteps.patch(url);
 
     verify(requestSpec, only()).patch(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void patchPollingPass(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    // Setup fixture
+    Response firstResponse = getResponseWithStatusCode(500);
+    Response secondResponse = getResponseWithStatusCode(200);
+
+    when(requestSpec.patch(url)).thenReturn(firstResponse).thenReturn(secondResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    // Executing and verifying
+    assertDoesNotThrow(() -> apiRequestSteps.patch(url, matcher, CONDITION_MESSAGE));
+    ;
+    verify(requestSpec, times(2)).patch(url);
+  }
+
+  @ParameterizedTest
+  @MethodSource("requestSpecMockProvider")
+  void patchPollingFail(
+      RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response serverErrorResponse = getResponseWithStatusCode(500);
+
+    when(requestSpec.patch(url)).then(invocationOnMock -> serverErrorResponse);
+
+    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+
+    assertThrows(
+        ConditionTimeoutException.class,
+        () -> apiRequestSteps.patch(url, matcher, CONDITION_MESSAGE));
   }
 
   private static Stream<Arguments> requestSpecMockProvider() {
@@ -289,5 +503,21 @@ class ApiRequestStepsTests {
     apiRequestSteps.setRequestSpecification(requestSpecification);
 
     return Stream.of(Arguments.of(requestSpecification, apiRequestSteps, url));
+  }
+
+  private Matcher<Response> getResponseStatusCodeOkMatcher() {
+    return new BaseMatcher<>() {
+      @Override
+      public boolean matches(Object actual) {
+        return ((Response) actual).getStatusCode() == 200;
+      }
+
+      @Override
+      public void describeTo(Description description) {}
+    };
+  }
+
+  private Response getResponseWithStatusCode(int i) {
+    return new ResponseBuilder().setStatusCode(i).build();
   }
 }

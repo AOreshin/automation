@@ -1,0 +1,5 @@
+<aspectj>
+	<aspects>
+		<aspect name="com.github.aoreshin.junit5.allure.steps.StepRepositoryAspect"/>
+	</aspects>
+</aspectj>

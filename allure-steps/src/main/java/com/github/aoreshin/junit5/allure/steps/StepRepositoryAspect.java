@@ -6,6 +6,7 @@ import static io.qameta.allure.util.ResultsUtils.getStatus;
 import static io.qameta.allure.util.ResultsUtils.getStatusDetails;
 import static java.util.stream.Collectors.toSet;
 
+import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import io.qameta.allure.model.Parameter;
@@ -44,7 +45,7 @@ public class StepRepositoryAspect {
   private static final Set<Class<?>> STEP_REPOSITORY_INTERFACES =
       new AnnotatedTypeScanner(true, StepRepository.class)
           .findTypes("").stream().filter(Class::isInterface).collect(toSet());
-  private AllureLifecycle lifecycle;
+  private AllureLifecycle lifecycle = Allure.getLifecycle();
 
   @Pointcut("execution(public * *..*(..))")
   public void anyPublicMethod() {}

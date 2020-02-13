@@ -457,8 +457,7 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void patch(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
-    apiRequestSteps
-            .patch(url);
+    apiRequestSteps.patch(url);
 
     verify(requestSpec, only()).patch(url);
   }

@@ -11,9 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /** Class that helps to create nested Allure steps directly in test code */
-final class StepWrapper {
+class StepWrapper {
   private static final Logger LOGGER = LogManager.getLogger();
   private final Stack<String> uuidStack = new Stack<>();
+  private AllureLifecycle lifecycle = Allure.getLifecycle();
 
   StepWrapper() {}
 
@@ -25,7 +26,7 @@ final class StepWrapper {
   void startStep(String stepName) {
     Objects.requireNonNull(stepName, "stepName should not be null");
     String uuid = UUID.randomUUID().toString();
-    lifecycle().startStep(uuid, new StepResult().setName(stepName));
+    lifecycle.startStep(uuid, new StepResult().setName(stepName));
     uuidStack.push(uuid);
   }
 
@@ -37,15 +38,15 @@ final class StepWrapper {
   void stopStep(Status status) {
     if (uuidStack.size() != 0) {
       String uuid = uuidStack.pop();
-      lifecycle().updateStep(uuid, update -> update.setStatus(status));
-      lifecycle().stopStep(uuid);
+      lifecycle.updateStep(uuid, update -> update.setStatus(status));
+      lifecycle.stopStep(uuid);
     } else {
       LOGGER.warn("No steps to stop!");
     }
   }
 
   /** Only for testing */
-  AllureLifecycle lifecycle() {
-    return Allure.getLifecycle();
+  void setLifecycle(AllureLifecycle lifecycle) {
+    this.lifecycle = lifecycle;
   }
 }

@@ -72,7 +72,61 @@ class ApiValidationStepsTests {
 
   @ParameterizedTest
   @MethodSource("stepsAndResponse")
+  void assertEqualsJsonMapPass(ApiValidationSteps apiValidationSteps, Response response) {
+    Map<String, String> values =
+        Map.of(
+            "path1", "value1",
+            "path2", "value2",
+            "path3", "value3");
+
+    setJsonPathsAndValues(response, values);
+    assertDoesNotThrow(() -> apiValidationSteps.assertEqualsJson(values));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertEqualsJsonMapFail(ApiValidationSteps apiValidationSteps, Response response) {
+    Map<String, String> actualValues =
+        Map.of(
+            "path1", "value1",
+            "path2", "value2",
+            "path3", "value3");
+
+    Map<String, String> expectedValues =
+        Map.of(
+            "path1", "value1",
+            "path2", "blah-blah-blah",
+            "path3", "value3");
+
+    setJsonPathsAndValues(response, actualValues);
+    assertThrows(AssertionError.class, () -> apiValidationSteps.assertEqualsJson(expectedValues));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
   void assertContainsStringJsonPass(ApiValidationSteps apiValidationSteps, Response response) {
+    String jsonPath = "some.field";
+    String value = "value";
+
+    Mockito.when(response.getBody().jsonPath().get(jsonPath)).thenReturn(value);
+    assertDoesNotThrow(() -> apiValidationSteps.assertContainsStringJson(jsonPath, value));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertContainsStringFail(ApiValidationSteps apiValidationSteps, Response response) {
+    String jsonPath = "some.field";
+    String value = "value";
+    String wrongValue = "iAmSoWrong";
+
+    Mockito.when(response.getBody().jsonPath().get(jsonPath)).thenReturn(wrongValue);
+    assertThrows(
+        AssertionError.class, () -> apiValidationSteps.assertContainsStringJson(jsonPath, value));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertContainsStringJsonMapPass(ApiValidationSteps apiValidationSteps, Response response) {
     Map<String, String> pathsAndValuesToContain =
         Map.of(
             "path1", "value1",
@@ -92,7 +146,7 @@ class ApiValidationStepsTests {
 
   @ParameterizedTest
   @MethodSource("stepsAndResponse")
-  void assertContainsStringJsonFail(ApiValidationSteps apiValidationSteps, Response response) {
+  void assertContainsStringJsonMapFail(ApiValidationSteps apiValidationSteps, Response response) {
     Map<String, String> pathsAndValuesToContain =
         Map.of(
             "path1", "value1",
@@ -124,14 +178,54 @@ class ApiValidationStepsTests {
     String path = "somePath";
     String value = "lul";
 
-    Mockito.when(response.getBody().jsonPath().get(path)).thenReturn(value);
+    when(response.getBody().jsonPath().get(path)).thenReturn(value);
 
     assertThrows(AssertionError.class, () -> apiValidationSteps.assertNullJson(path));
   }
 
   @ParameterizedTest
   @MethodSource("stepsAndResponse")
+  void assertNullJsonListPass(ApiValidationSteps apiValidationSteps) {
+    List<String> paths = List.of("path1", "path2", "path3");
+    assertDoesNotThrow(() -> apiValidationSteps.assertNullJson(paths));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertNullJsonListFail(ApiValidationSteps apiValidationSteps, Response response) {
+    List<String> paths = List.of("path1", "path2", "path3");
+
+    String path = paths.get(0);
+    String value = "blah";
+
+    when(response.getBody().jsonPath().get(path)).thenReturn(value);
+
+    assertThrows(AssertionError.class, () -> apiValidationSteps.assertNullJson(paths));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
   void assertNotNullJsonPass(ApiValidationSteps apiValidationSteps, Response response) {
+    String path = "somePath";
+    String value = "lul";
+
+    when(response.getBody().jsonPath().get(path)).thenReturn(value);
+    assertDoesNotThrow(() -> apiValidationSteps.assertNotNullJson("somePath"));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertNotNullJsonFail(ApiValidationSteps apiValidationSteps, Response response) {
+    String path = "somePath";
+
+    when(response.getBody().jsonPath().get(path)).thenReturn(null);
+
+    assertThrows(AssertionError.class, () -> apiValidationSteps.assertNotNullJson(path));
+  }
+
+  @ParameterizedTest
+  @MethodSource("stepsAndResponse")
+  void assertNotNullJsonMapPass(ApiValidationSteps apiValidationSteps, Response response) {
     Map<String, String> values =
         Map.of(
             "path1", "value1",
@@ -147,7 +241,7 @@ class ApiValidationStepsTests {
 
   @ParameterizedTest
   @MethodSource("stepsAndResponse")
-  void assertNotNullJsonFail(ApiValidationSteps apiValidationSteps, Response response) {
+  void assertNotNullJsonMapFail(ApiValidationSteps apiValidationSteps, Response response) {
     Map<String, String> values = new HashMap<>();
 
     values.put("path1", "value1");

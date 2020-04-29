@@ -41,10 +41,11 @@ import org.springframework.data.util.AnnotatedTypeScanner;
  * </ul>
  */
 @Aspect
-public final class StepRepositoryAspect {
-  private final Set<Class<?>> STEP_REPOSITORY_INTERFACES =
+public class StepRepositoryAspect {
+  private static final Set<Class<?>> STEP_REPOSITORY_INTERFACES =
       new AnnotatedTypeScanner(true, StepRepository.class)
           .findTypes("").stream().filter(Class::isInterface).collect(toSet());
+  private AllureLifecycle lifecycle = Allure.getLifecycle();
 
   @Pointcut("execution(public * *..*(..))")
   public void anyPublicMethod() {}
@@ -99,21 +100,20 @@ public final class StepRepositoryAspect {
 
     StepResult result = new StepResult().setName(name).setParameters(parameters);
 
-    getLifecycle().startStep(uuid, result);
+    lifecycle.startStep(uuid, result);
   }
 
   private void stopSuccessfulStep() {
-    getLifecycle().updateStep(s -> s.setStatus(Status.PASSED));
-    getLifecycle().stopStep();
+    lifecycle.updateStep(s -> s.setStatus(Status.PASSED));
+    lifecycle.stopStep();
   }
 
   private void stopBrokenStep(Throwable throwable) {
-    getLifecycle()
-        .updateStep(
-            s ->
-                s.setStatus(getStatus(throwable).orElse(Status.BROKEN))
-                    .setStatusDetails(getStatusDetails(throwable).orElse(null)));
-    getLifecycle().stopStep();
+    lifecycle.updateStep(
+        s ->
+            s.setStatus(getStatus(throwable).orElse(Status.BROKEN))
+                .setStatusDetails(getStatusDetails(throwable).orElse(null)));
+    lifecycle.stopStep();
   }
 
   private Object proceed(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -151,7 +151,7 @@ public final class StepRepositoryAspect {
   }
 
   /** Only for testing */
-  AllureLifecycle getLifecycle() {
-    return Allure.getLifecycle();
+  void setLifecycle(AllureLifecycle lifecycle) {
+    this.lifecycle = lifecycle;
   }
 }

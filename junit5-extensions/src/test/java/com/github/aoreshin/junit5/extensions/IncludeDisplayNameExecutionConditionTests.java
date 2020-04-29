@@ -54,9 +54,11 @@ final class IncludeDisplayNameExecutionConditionTests {
 
   @Test
   void shouldEnableTest() {
-    String displayName = "includeMeNow";
+    String displayName = "Some test to include in suite";
 
-    System.setProperty(PROPERTY_NAME, displayName);
+    String shouldContain = "to include";
+
+    System.setProperty(PROPERTY_NAME, shouldContain);
 
     ExtensionContext context = mock(ExtensionContext.class);
     when(context.getDisplayName()).thenReturn(displayName);
@@ -67,7 +69,7 @@ final class IncludeDisplayNameExecutionConditionTests {
 
     assertFalse(result.isDisabled());
     assertEquals(
-        displayName + " is present in " + PROPERTY_NAME + " property " + List.of(displayName),
+        displayName + " is present in " + PROPERTY_NAME + " property " + List.of(shouldContain),
         result.getReason().orElseThrow());
   }
 }

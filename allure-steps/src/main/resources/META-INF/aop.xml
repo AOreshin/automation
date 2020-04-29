@@ -1,0 +1,10 @@
+<aspectj>
+	<aspects>
+		<aspect name="com.github.aoreshin.junit5.allure.steps.StepRepositoryAspect"/>
+	</aspects>
+	<!--Excluding groovy classes as they somehow get corrupted by weaver-->
+	<weaver>
+		<exclude within="groovyjarjarantlr..*"/>
+		<exclude within="org.codehaus.groovy..*"/>
+	</weaver>
+</aspectj>

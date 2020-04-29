@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  *       method and pass parameter names through constructor.
  * </ul>
  */
-public final class AllureEncodeStepParametersExtension implements AfterEachCallback {
+public class AllureEncodeStepParametersExtension implements AfterEachCallback {
   private final List<String> parameterNames;
 
   public AllureEncodeStepParametersExtension() {

@@ -2,6 +2,7 @@ package com.github.aoreshin.allure.webdriver;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import com.github.aoreshin.junit5.allure.steps.PageObject;
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import java.util.List;
 import org.openqa.selenium.By;
@@ -15,6 +16,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  *
  * @param <T> - recursive generic type parameter
  */
+@PageObject
 public abstract class WebDriverPageObject<T extends WebDriverPageObject<T>>
     extends StepWrapperSteps<T> {
   @SuppressWarnings("unused")

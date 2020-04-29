@@ -27,10 +27,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * <p>Use com.github.aoreshin.junit5.extensions.TestTemplateInvocationContextBuilder addExtension
  * method and pass constructor parameters.
  */
-public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
+public class AllureConcurrentLoggerAttachmentsExtension implements AfterEachCallback {
   private final String logPath;
   private final String removeFishTagRegex;
   private final String removeSensitiveDataRegex;
+  private AllureLifecycle lifecycle = Allure.getLifecycle();
 
   public AllureConcurrentLoggerAttachmentsExtension(String logPath, String removeFishTagRegex) {
     this.logPath = logPath;
@@ -54,8 +55,7 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
       groupedLogMessages = groupedLogMessages.replaceAll(removeSensitiveDataRegex, "*****");
     }
 
-    lifecycle()
-        .addAttachment("Полный лог", "text/plain", ".txt", groupedLogMessages.getBytes(UTF_8));
+    lifecycle.addAttachment("Полный лог", "text/plain", ".txt", groupedLogMessages.getBytes(UTF_8));
   }
 
   private String getMessagesWithId(String uuid) throws IOException {
@@ -65,12 +65,12 @@ public final class AllureConcurrentLoggerAttachmentsExtension implements AfterEa
         .collect(Collectors.joining("\n"));
   }
 
-  /** Only for testing */
-  AllureLifecycle lifecycle() {
-    return Allure.getLifecycle();
-  }
-
   String getRemoveSensitiveDataRegex() {
     return removeSensitiveDataRegex;
+  }
+
+  /** Only for testing */
+  void setLifecycle(AllureLifecycle lifecycle) {
+    this.lifecycle = lifecycle;
   }
 }

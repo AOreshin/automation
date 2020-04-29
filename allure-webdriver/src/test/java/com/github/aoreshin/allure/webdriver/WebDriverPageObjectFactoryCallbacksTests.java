@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import io.qameta.allure.AllureLifecycle;
 import java.lang.reflect.Parameter;
 import java.util.Set;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 
@@ -19,9 +20,14 @@ class WebDriverPageObjectFactoryCallbacksTests {
     WebDriverPageObjectFactory factory =
         mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
 
-    WebDriverPageObjectFactoryCallbacks callbacks =
-        new WebDriverPageObjectFactoryCallbacks(null, factory);
+    Supplier<WebDriverPageObjectFactory> supplier = () -> factory;
 
+    WebDriverPageObjectFactoryCallbacks callbacks =
+        new WebDriverPageObjectFactoryCallbacks(null, supplier);
+
+    callbacks.beforeEach(null);
+
+    // Executing SUT
     callbacks.afterEach(null);
 
     verify(factory, only()).shutdown();
@@ -82,6 +88,7 @@ class WebDriverPageObjectFactoryCallbacksTests {
     // Fixture setup
     WebDriverPageObjectFactory factory =
         mock(WebDriverPageObjectFactory.class, withSettings().useConstructor(null, null));
+    Supplier<WebDriverPageObjectFactory> supplier = () -> factory;
 
     ParameterContext parameterContext = mock(ParameterContext.class);
     Parameter parameter = mock(Parameter.class);
@@ -90,7 +97,9 @@ class WebDriverPageObjectFactoryCallbacksTests {
     doReturn(FirstPageObject.class).when(parameter).getType();
 
     WebDriverPageObjectFactoryCallbacks callbacks =
-        new WebDriverPageObjectFactoryCallbacks(null, factory);
+        new WebDriverPageObjectFactoryCallbacks(null, supplier);
+
+    callbacks.beforeEach(null);
 
     // Executing SUT
     callbacks.resolveParameter(parameterContext, null);
@@ -102,6 +111,7 @@ class WebDriverPageObjectFactoryCallbacksTests {
   void resolveParameterFail() {
     // Fixture setup
     WebDriverPageObjectFactory factory = new WebDriverPageObjectFactory(null, null);
+    Supplier<WebDriverPageObjectFactory> supplier = () -> factory;
 
     ParameterContext parameterContext = mock(ParameterContext.class);
     Parameter parameter = mock(Parameter.class);
@@ -110,7 +120,9 @@ class WebDriverPageObjectFactoryCallbacksTests {
     doReturn(Integer.class).when(parameter).getType();
 
     WebDriverPageObjectFactoryCallbacks callbacks =
-        new WebDriverPageObjectFactoryCallbacks(null, factory);
+        new WebDriverPageObjectFactoryCallbacks(null, supplier);
+
+    callbacks.beforeEach(null);
 
     assertThrows(
         WebDriverPageObjectFactory.PageNotInitializedException.class,
@@ -127,14 +139,18 @@ class WebDriverPageObjectFactoryCallbacksTests {
     WebDriverPageObjectFactory factory = mock(WebDriverPageObjectFactory.class);
     when(factory.makeScreenshot()).thenReturn(screenshot);
 
+    Supplier<WebDriverPageObjectFactory> supplier = () -> factory;
+
     AllureLifecycle lifecycle = mock(AllureLifecycle.class);
 
     WebDriverPageObjectFactoryCallbacks callbacks =
-        spy(new WebDriverPageObjectFactoryCallbacks(null, factory));
+        spy(new WebDriverPageObjectFactoryCallbacks(null, supplier));
 
     when(callbacks.lifecycle()).thenReturn(lifecycle);
 
     FatalException exception = new FatalException();
+
+    callbacks.beforeEach(null);
 
     // Executing SUT
     assertThrows(

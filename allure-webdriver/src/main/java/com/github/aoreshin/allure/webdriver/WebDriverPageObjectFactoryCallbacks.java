@@ -3,6 +3,7 @@ package com.github.aoreshin.allure.webdriver;
 import io.qameta.allure.Allure;
 import io.qameta.allure.AllureLifecycle;
 import java.util.Set;
+import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.extension.*;
@@ -12,17 +13,26 @@ import org.junit.jupiter.api.extension.*;
  * test execution, makes screenshot when test fails
  */
 public final class WebDriverPageObjectFactoryCallbacks
-    implements AfterEachCallback, ParameterResolver, TestExecutionExceptionHandler {
+    implements BeforeEachCallback,
+        AfterEachCallback,
+        ParameterResolver,
+        TestExecutionExceptionHandler {
   private static final Logger LOGGER = LogManager.getLogger();
 
   private final Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet;
-  private final WebDriverPageObjectFactory pageObjectFactory;
+  private final Supplier<WebDriverPageObjectFactory> pageObjectFactorySupplier;
+  private WebDriverPageObjectFactory pageObjectFactory;
 
   public WebDriverPageObjectFactoryCallbacks(
       Set<Class<? extends WebDriverPageObject<?>>> pageObjectClassSet,
-      WebDriverPageObjectFactory pageObjectFactory) {
+      Supplier<WebDriverPageObjectFactory> pageObjectFactorySupplier) {
     this.pageObjectClassSet = pageObjectClassSet;
-    this.pageObjectFactory = pageObjectFactory;
+    this.pageObjectFactorySupplier = pageObjectFactorySupplier;
+  }
+
+  @Override
+  public void beforeEach(ExtensionContext context) {
+    this.pageObjectFactory = pageObjectFactorySupplier.get();
   }
 
   @Override

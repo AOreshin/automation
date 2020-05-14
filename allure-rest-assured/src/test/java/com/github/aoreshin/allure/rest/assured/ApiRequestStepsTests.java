@@ -1,19 +1,11 @@
 package com.github.aoreshin.allure.rest.assured;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
-
 import io.restassured.builder.ResponseBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.mapper.ObjectMapper;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import java.time.Duration;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 import org.awaitility.Awaitility;
 import org.awaitility.core.ConditionTimeoutException;
 import org.hamcrest.BaseMatcher;
@@ -23,6 +15,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
 
 class ApiRequestStepsTests {
   static {
@@ -252,9 +254,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void post(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.post(url)).thenReturn(response);
+
     apiRequestSteps.post(url);
 
     verify(requestSpec, only()).post(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -267,7 +273,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.post(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.post(url, matcher, CONDITION_MESSAGE));
@@ -283,7 +289,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.post(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -293,9 +299,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void put(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.put(url)).thenReturn(response);
+
     apiRequestSteps.put(url);
 
     verify(requestSpec, only()).put(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -308,7 +318,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.put(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.put(url, matcher, CONDITION_MESSAGE));
@@ -324,7 +334,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.put(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -334,9 +344,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void get(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.get(url)).thenReturn(response);
+
     apiRequestSteps.get(url);
 
     verify(requestSpec, only()).get(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -349,7 +363,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.get(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.get(url, matcher, CONDITION_MESSAGE));
@@ -365,7 +379,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.get(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -375,9 +389,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void delete(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.delete(url)).thenReturn(response);
+
     apiRequestSteps.delete(url);
 
     verify(requestSpec, only()).delete(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -390,7 +408,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.delete(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.delete(url, matcher, CONDITION_MESSAGE));
@@ -406,7 +424,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.delete(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -416,9 +434,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void head(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.head(url)).thenReturn(response);
+
     apiRequestSteps.head(url);
 
     verify(requestSpec, only()).head(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -431,7 +453,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.head(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.head(url, matcher, CONDITION_MESSAGE));
@@ -447,7 +469,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.head(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -457,9 +479,13 @@ class ApiRequestStepsTests {
   @ParameterizedTest
   @MethodSource("requestSpecMockProvider")
   void patch(RequestSpecification requestSpec, ApiRequestSteps apiRequestSteps, String url) {
+    Response response = mock(Response.class);
+    when(requestSpec.patch(url)).thenReturn(response);
+
     apiRequestSteps.patch(url);
 
     verify(requestSpec, only()).patch(url);
+    verify(response, only()).then();
   }
 
   @ParameterizedTest
@@ -472,7 +498,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.patch(url)).thenReturn(firstResponse).thenReturn(secondResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     // Executing and verifying
     assertDoesNotThrow(() -> apiRequestSteps.patch(url, matcher, CONDITION_MESSAGE));
@@ -488,7 +514,7 @@ class ApiRequestStepsTests {
 
     when(requestSpec.patch(url)).then(invocationOnMock -> serverErrorResponse);
 
-    Matcher<Response> matcher = getResponseStatusCodeOkMatcher();
+    Matcher<ValidatableResponse> matcher = getResponseStatusCodeOkMatcher();
 
     assertThrows(
         ConditionTimeoutException.class,
@@ -505,11 +531,11 @@ class ApiRequestStepsTests {
     return Stream.of(Arguments.of(requestSpecification, apiRequestSteps, url));
   }
 
-  private Matcher<Response> getResponseStatusCodeOkMatcher() {
+  private Matcher<ValidatableResponse> getResponseStatusCodeOkMatcher() {
     return new BaseMatcher<>() {
       @Override
       public boolean matches(Object actual) {
-        return ((Response) actual).getStatusCode() == 200;
+        return ((ValidatableResponse) actual).extract().statusCode() == 200;
       }
 
       @Override

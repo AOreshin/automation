@@ -1,0 +1,5 @@
+<aspectj>
+	<weaver>
+		<exclude within="org.apache.commons.logging..*"/>
+	</weaver>
+</aspectj>

@@ -1,31 +1,46 @@
 package com.github.aoreshin.allure.rest.assured;
 
+import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
+import io.qameta.allure.Step;
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+
+import java.util.Map;
+
 import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
 import static java.util.stream.Collectors.toMap;
 
-import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
-import io.qameta.allure.Step;
-import io.restassured.response.Response;
-import java.util.Map;
-
 /** Steps for extracting data from Rest Assured's Response */
 public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
-  private final Response response;
+  private final ExtractableResponse<Response> extractableResponse;
 
-  ApiExtractingSteps(Response response) {
-    this.response = response;
+  ApiExtractingSteps(ExtractableResponse<Response> extractableResponse) {
+    this.extractableResponse = extractableResponse;
   }
 
-  @Step("Сохранение {jsonPath} как {key}")
-  public <T> ApiExtractingSteps saveBodyJsonPath(
-      String jsonPath, String key, Map<String, Object> map, Class<T> type) {
-    T value = response.getBody().jsonPath().get(jsonPath);
+  @Step("Сохранение ответа как {key}")
+  public <T> ApiExtractingSteps saveResponse(String key, Map<String, Object> map) {
+    map.put(key, extractableResponse.response());
+    return this;
+  }
+
+  @Step("Сохранение тела запроса как {key}")
+  public <T> ApiExtractingSteps saveBody(String key, Map<String, Object> map, Class<T> type) {
+    T value = extractableResponse.body().as(type);
+    map.put(key, value);
+    return this;
+  }
+
+  @Step("Сохранение поля {path} как {key}")
+  public <T> ApiExtractingSteps saveBody(
+      String path, String key, Map<String, Object> map, Class<T> type) {
+    T value = extractableResponse.path(path);
     map.put(key, value);
     return this;
   }
 
   @Step("Сохранение полей с соответствующими ключами {pathsAndKeys}")
-  public <T> ApiExtractingSteps saveBodyJsonPath(
+  public <T> ApiExtractingSteps saveBody(
       Map<String, String> pathsAndKeys, Map<String, Object> map, Class<T> type) {
     Map<String, T> values =
         pathsAndKeys.entrySet().stream()
@@ -34,7 +49,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
                     Map.Entry::getValue,
                     entry -> {
                       String expression = entry.getKey();
-                      return response.getBody().jsonPath().get(expression);
+                      return extractableResponse.path(expression);
                     }));
     map.putAll(values);
     return this;
@@ -42,7 +57,7 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
 
   @Step("Сохранение заголовка {header} как {key}")
   public ApiExtractingSteps saveHeader(String header, String key, Map<String, Object> map) {
-    String value = response.getHeader(header);
+    String value = extractableResponse.header(header);
     map.put(key, value);
     return this;
   }
@@ -52,21 +67,22 @@ public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {
       Map<String, String> headersAndKeys, Map<String, Object> map) {
     Map<String, String> values =
         headersAndKeys.entrySet().stream()
-            .collect(toMap(Map.Entry::getValue, entry -> response.getHeader(entry.getKey())));
+            .collect(
+                toMap(Map.Entry::getValue, entry -> extractableResponse.header(entry.getKey())));
     map.putAll(values);
     return this;
   }
 
   @Step("Сохранение cookie {cookieName} как {key}")
   public ApiExtractingSteps saveCookie(String cookieName, String key, Map<String, Object> map) {
-    String cookie = response.cookie(cookieName);
+    String cookie = extractableResponse.cookie(cookieName);
     map.put(key, cookie);
     return this;
   }
 
   @Step("Сохранение всех cookies как {key}")
   public ApiExtractingSteps saveAllCookies(String key, Map<String, Object> map) {
-    Map<String, String> cookies = response.cookies();
+    Map<String, String> cookies = extractableResponse.cookies();
     map.put(key, cookies);
     return this;
   }

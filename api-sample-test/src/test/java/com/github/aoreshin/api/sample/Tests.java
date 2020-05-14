@@ -1,12 +1,11 @@
 package com.github.aoreshin.api.sample;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 public class Tests {
   @Disabled

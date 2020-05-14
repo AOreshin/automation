@@ -1,14 +1,13 @@
 package com.github.aoreshin.allure.rest.assured;
 
+import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
+import static java.util.stream.Collectors.toMap;
+
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import io.qameta.allure.Step;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-
 import java.util.Map;
-
-import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
-import static java.util.stream.Collectors.toMap;
 
 /** Steps for extracting data from Rest Assured's Response */
 public class ApiExtractingSteps extends StepWrapperSteps<ApiExtractingSteps> {

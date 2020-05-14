@@ -1,9 +1,18 @@
 package com.github.aoreshin.allure.rest.assured;
 
+import static org.apache.http.HttpStatus.SC_OK;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.*;
+
 import io.restassured.http.ContentType;
 import io.restassured.matcher.DetailedCookieMatcher;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.Argument;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 import org.hamcrest.Matcher;
 import org.hamcrest.collection.IsIterableContainingInOrder;
 import org.hamcrest.core.IsEqual;
@@ -12,16 +21,6 @@ import org.hamcrest.core.StringContains;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
-
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.mockito.Mockito.*;
 
 class ApiValidationStepsTests {
   private static final Matcher<String> DUMMY_STRING_MATCHER = equalTo("");

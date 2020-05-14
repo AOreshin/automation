@@ -1,22 +1,21 @@
 package com.github.aoreshin.allure.rest.assured;
 
+import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import io.qameta.allure.Step;
 import io.restassured.http.ContentType;
 import io.restassured.matcher.DetailedCookieMatcher;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.Argument;
-import org.hamcrest.Matcher;
-import org.junit.jupiter.api.function.Executable;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import static com.github.aoreshin.allure.rest.assured.ApiRequestSteps.apiRequest;
-import static java.util.stream.Collectors.toList;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.function.Executable;
 
 /** Step for validating Rest Assured's Response */
 public class ApiValidationSteps extends StepWrapperSteps<ApiValidationSteps> {

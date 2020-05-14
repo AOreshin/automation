@@ -1,19 +1,18 @@
 package com.github.aoreshin.allure.rest.assured;
 
+import static io.restassured.RestAssured.given;
+
 import com.github.aoreshin.junit5.allure.steps.StepWrapperSteps;
 import io.qameta.allure.Step;
 import io.restassured.mapper.ObjectMapper;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import org.awaitility.Awaitility;
-import org.hamcrest.Matcher;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-
-import static io.restassured.RestAssured.given;
+import org.awaitility.Awaitility;
+import org.hamcrest.Matcher;
 
 /** Steps for building request and sending it */
 public class ApiRequestSteps extends StepWrapperSteps<ApiRequestSteps> {
